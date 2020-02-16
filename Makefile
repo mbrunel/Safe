@@ -6,7 +6,7 @@
 #    By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/15 01:02:41 by mbrunel           #+#    #+#              #
-#    Updated: 2020/02/16 04:31:57 by mbrunel          ###   ########.fr        #
+#    Updated: 2020/02/16 04:34:51 by mbrunel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,7 +45,7 @@ SRC=main.c
 OBJ:=$(patsubst %.c, $(D_OBJ)/%.o, $(SRC))
 DEP:=$(patsubst %.c, $(D_DEP)/%.d, $(SRC))
 
-$(NAME) : $(OBJ) $(GIT)
+$(NAME) : $(GIT) $(OBJ)
 	@$(MAKE) -C $(D_LIBFT)
 	@$(CC) $(OBJ) $(LDFLAGS) -o $(NAME)
 	@printf "\n%s\t\t$(C_GREEN)[$(SUCCESS_MSG)]$(C_NONE)\n\n" $@
