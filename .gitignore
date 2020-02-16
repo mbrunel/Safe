@@ -35,6 +35,7 @@
 *.i*86
 *.x86_64
 *.hex
+ps-managerv2
 
 # Debug files
 *.dSYM/

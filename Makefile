@@ -6,11 +6,13 @@
 #    By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/15 01:02:41 by mbrunel           #+#    #+#              #
-#    Updated: 2020/02/16 04:17:40 by mbrunel          ###   ########.fr        #
+#    Updated: 2020/02/16 04:31:57 by mbrunel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME=ps-managerv2
+
+GIT=$(D_LIBFT)/.git
 
 BUILD=.build
 D_SRC=src
@@ -43,7 +45,7 @@ SRC=main.c
 OBJ:=$(patsubst %.c, $(D_OBJ)/%.o, $(SRC))
 DEP:=$(patsubst %.c, $(D_DEP)/%.d, $(SRC))
 
-$(NAME) : $(OBJ)
+$(NAME) : $(OBJ) $(GIT)
 	@$(MAKE) -C $(D_LIBFT)
 	@$(CC) $(OBJ) $(LDFLAGS) -o $(NAME)
 	@printf "\n%s\t\t$(C_GREEN)[$(SUCCESS_MSG)]$(C_NONE)\n\n" $@
@@ -61,6 +63,10 @@ fclean : clean
 	@printf "\nrm %s\t$(C_GREEN)[$(SUCCESS_MSG)]$(C_NONE)\n" $(LIBFT)
 
 re : fclean all
+
+$(GIT) :
+	@git submodule init
+	@git submodule update --remote
 
 $(BUILD) :
 	@mkdir -p $@ $(DIRS)
