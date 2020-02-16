@@ -6,7 +6,7 @@
 #    By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/15 01:02:41 by mbrunel           #+#    #+#              #
-#    Updated: 2020/02/16 04:34:51 by mbrunel          ###   ########.fr        #
+#    Updated: 2020/02/16 07:39:14 by mbrunel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,8 +31,8 @@ LIBFT=$(D_LIBFT)/libft.a
 CC=gcc
 CFLAGS=-Wall -Wextra #-Werror
 DFLAGS=-MP -MMD -MF $(D_DEP)/$*.d -MT $@
-IFLAGS=-I$(D_INC) -I$(D_LIBFT)/inc
-LDFLAGS= $(LIBFT)
+IFLAGS=-I$(D_INC) -I$(D_LIBFT)/inc `pkg-config --cflags gtk+-2.0`
+LDFLAGS= $(LIBFT) `pkg-config --libs gtk+-2.0`
 
 C_RED=\033[31m
 C_GREEN=\033[32m
