@@ -1,5 +1,5 @@
 /**
- * Nuklear+ (read as "Nuklear cross") is a front-end overlay for Nuklear GUI library.
+ * Nuklear+ (read as "Nuklear cross") is a front-end overlay for Nuklear GUI library. 
  * Write one simple code, compile it for any supported frontend.
  *
  * License: public domain
@@ -14,20 +14,20 @@
     #if NKC_OPENGL_VERSION == 3
         #include <GL/glew.h>
     #endif
-
+    
     #if defined(NKC_RASPBERRY_PI)
         #include "bcm_host.h"
     #endif
+    
 
-
-    #include </Users/mbrunel/.brew/include/SDL2/SDL.h>
-
+    #include <SDL2/SDL.h>
+    
     #if defined(NKC_OPENGL_VERSION) && (NKC_OPENGL_VERSION == NGL_ES2)
         /*#define GL_VERSION_1_5
-        #include </Users/mbrunel/.brew/include/SDL2//SDL_opengles2.h>*/
+        #include <SDL2/SDL_opengles2.h>*/
         #include <GLES2/gl2.h>
     #else
-        #include </Users/mbrunel/.brew/include/SDL2//SDL_opengl.h>
+        #include <SDL2/SDL_opengl.h>
     #endif
 
     struct nkc {
@@ -41,11 +41,11 @@
         int win_height;
     };
 
-    #if defined(NKC_OPENGL_VERSION) && (NKC_OPENGL_VERSION == NGL_ES2)
+    #if defined(NKC_OPENGL_VERSION) && (NKC_OPENGL_VERSION == NGL_ES2)      
         #if defined(NKC_IMPLEMENTATION)
             #define NK_SDL_GLES2_IMPLEMENTATION
         #endif
-
+        
         #define _OPENGL_ES_  NGL_ES2
         #include "../nuklear_drivers/nuklear_sdl_gles2.h"
     #else
@@ -62,7 +62,7 @@
         #endif
     #endif
 
-
+    
 /* Constants */
 #define NKC_KEY_ESCAPE SDL_SCANCODE_ESCAPE
 #define NKC_KEY_SPACE SDL_SCANCODE_SPACE
@@ -140,7 +140,7 @@
 
 
 #if defined(NKC_IMPLEMENTATION)
-NK_API struct nk_context *nkc_init(struct nkc* nkcHandle, const char* title,
+NK_API struct nk_context *nkc_init(struct nkc* nkcHandle, const char* title, 
                         int width, int height, enum nkc_window_mode windowMode)
 {
     struct nk_font_atlas *atlas;
@@ -160,20 +160,20 @@ NK_API struct nk_context *nkc_init(struct nkc* nkcHandle, const char* title,
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, NKC_OPENGL_VERSION);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, NKC_OPENGL_VERSION);
     #elif (NKC_OPENGL_VERSION == NGL_ES2)
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2); 
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0); 
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES); 
     #endif
-
+    
     #if defined(NKC_USE_OPENGL) && (NKC_USE_OPENGL == 3)
         SDL_GL_SetAttribute (SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
         SDL_GL_SetAttribute (SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     #endif
     nkcHandle->window = SDL_CreateWindow(title,
-        SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height,
+        SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, 
         SDL_WINDOW_OPENGL|SDL_WINDOW_SHOWN|SDL_WINDOW_ALLOW_HIGHDPI);
     nkcHandle->glContext = SDL_GL_CreateContext(nkcHandle->window);
-
+    
     #if !defined(__EMSCRIPTEN__)
     if( windowMode == NKC_WIN_FULLSCREEN )
         SDL_SetWindowFullscreen(nkcHandle->window, SDL_WINDOW_FULLSCREEN);
@@ -193,11 +193,11 @@ NK_API struct nk_context *nkc_init(struct nkc* nkcHandle, const char* title,
     nk_sdl_font_stash_begin(&atlas);
     nk_sdl_font_stash_end();
     glEnable(GL_TEXTURE_2D);
-
+    
     #if defined(__EMSCRIPTEN__)
     if( windowMode == NKC_WIN_FULLSCREEN ) nkc_fullscreen_enter(nkcHandle);
     #endif
-
+    
     nkcHandle->nkcInited = NKC_INITED;
     return nkcHandle->ctx;
 }
@@ -281,7 +281,7 @@ NK_API char nkc_get_key_char(int code){
             return name[0] - 'A' + 'a'; /* 'a' for NKC_KEY_A */
         } else return name[0];
     }
-    return 0;
+    return 0; 
 }
 #endif /* __EMSCRIPTEN__ */
 
