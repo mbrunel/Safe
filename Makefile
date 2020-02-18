@@ -64,7 +64,7 @@ $(NAME) : $(GIT) $(OBJ)
 
 all : $(NAME)
 
-linux :
+linux : $(GIT)
 	gcc $(D_SRC)/$(SRC) -O2 -Wall -DNKC_EXAMPLE -DNDEBUG -s -lm -std=c89 -DNKCD=NKC_SDL  -D_REENTRANT -I/usr/local/include/SDL2 -L/usr/local/lib -Wl,-rpath,/usr/local/lib -Wl,--enable-new-dtags -lSDL2 -I/usr/include/libdrm -lGL -o $(NAME) -Ilib/nuklear_linux -Iinc  -Ilib/libft/inc
 
 clean :
