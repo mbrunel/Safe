@@ -1,7 +1,8 @@
 {
 	"files.associations": {
-		"psm.h": "c"
-	}
+		"psm.h": "c",
+		"nuklear.h": "c",
+	},
 	"editor.tabSize": 4,
 	"editor.insertSpaces": false,
 	"editor.renderWhitespace": "all",

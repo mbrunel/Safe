@@ -6,7 +6,7 @@
 #    By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/15 01:02:41 by mbrunel           #+#    #+#              #
-#    Updated: 2020/02/16 07:39:14 by mbrunel          ###   ########.fr        #
+#    Updated: 2020/02/18 17:19:16 by mbrunel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,12 +27,13 @@ DIRS:=$(D_DEP) $(addprefix $(D_DEP)/, $(D_SUB))\
 D_LIB=lib
 D_LIBFT=$(D_LIB)/libft
 LIBFT=$(D_LIBFT)/libft.a
+D_NUKLEAR=$(D_LIB)/nuklear
 
 CC=gcc
 CFLAGS=-Wall -Wextra #-Werror
 DFLAGS=-MP -MMD -MF $(D_DEP)/$*.d -MT $@
-IFLAGS=-I$(D_INC) -I$(D_LIBFT)/inc `pkg-config --cflags gtk+-2.0`
-LDFLAGS= $(LIBFT) `pkg-config --libs gtk+-2.0`
+IFLAGS=-I$(D_INC) -I$(D_LIBFT)/inc -I$(D_NUKLEAR) `sdl2-config --cflags`
+LDFLAGS= $(LIBFT) -Ofast -lm -DNKCD=NKC_SDL -framework OpenGL -framework Cocoa -framework IOKit `sdl2-config --libs`
 
 C_RED=\033[31m
 C_GREEN=\033[32m
@@ -72,7 +73,7 @@ $(BUILD) :
 	@mkdir -p $@ $(DIRS)
 	@printf "\n%s\t\t\t$(C_GREEN)[$(SUCCESS_MSG)]$(C_NONE)\n" $@
 
-$(D_OBJ)/%.o : $(D_SRC)/%.c $(INC) Makefile | $(BUILD)
+$(D_OBJ)/%.o : $(D_SRC)/%.c | $(BUILD)
 	@$(CC) $(CFLAGS) $(IFLAGS) $(DFLAGS) -c $< -o $@
 	@printf "\n%s\t\t$(C_GREEN)[$(SUCCESS_MSG)]$(C_NONE)\n" $<
 
