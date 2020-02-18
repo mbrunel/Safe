@@ -1,3 +1,4 @@
-[submodule "libft"]
+[submodule "lib/libft"]
 	path = lib/libft
 	url = https://github.com/ChuOkupai/libft.git
+
