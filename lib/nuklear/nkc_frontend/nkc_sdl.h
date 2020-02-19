@@ -141,9 +141,10 @@
 
 #if defined(NKC_IMPLEMENTATION)
 NK_API struct nk_context *nkc_init(struct nkc* nkcHandle, const char* title,
-                        int width, int height, enum nkc_window_mode windowMode)
+                        double width, double height, enum nkc_window_mode windowMode)
 {
     struct nk_font_atlas *atlas;
+
     #if defined(NKC_RASPBERRY_PI)
         bcm_host_init();
     #endif
@@ -169,8 +170,9 @@ NK_API struct nk_context *nkc_init(struct nkc* nkcHandle, const char* title,
         SDL_GL_SetAttribute (SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
         SDL_GL_SetAttribute (SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     #endif
+
     nkcHandle->window = SDL_CreateWindow(title,
-        SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height,
+        SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 1000,
         SDL_WINDOW_OPENGL|SDL_WINDOW_SHOWN|SDL_WINDOW_ALLOW_HIGHDPI);
     nkcHandle->glContext = SDL_GL_CreateContext(nkcHandle->window);
 
@@ -193,7 +195,14 @@ NK_API struct nk_context *nkc_init(struct nkc* nkcHandle, const char* title,
     nk_sdl_font_stash_begin(&atlas);
     nk_sdl_font_stash_end();
     glEnable(GL_TEXTURE_2D);
-
+	// SDL_SetWindowResizable(nkcHandle->window,
+    //                      SDL_TRUE);
+	SDL_DisplayMode DM;
+	SDL_GetCurrentDisplayMode(0, &DM);
+	nkcHandle->win_height = DM.h * height;
+	nkcHandle->win_width = DM.w * width;
+	SDL_SetWindowSize(nkcHandle->window  , 	nkcHandle->win_width, nkcHandle->win_height);
+	SDL_SetWindowPosition(nkcHandle->window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
     #if defined(__EMSCRIPTEN__)
     if( windowMode == NKC_WIN_FULLSCREEN ) nkc_fullscreen_enter(nkcHandle);
     #endif

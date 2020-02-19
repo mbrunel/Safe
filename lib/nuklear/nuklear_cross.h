@@ -4,13 +4,13 @@
  * @author Dmitry Hrabrov a.k.a. DeXPeriX
  * @date 2016-2017
  * @copyright public domain - no warrenty implied; use at your own risk.
- * @brief Nuklear+ (read as "Nuklear cross") is a front-end overlay for Nuklear GUI library. 
- * 
- * 
+ * @brief Nuklear+ (read as "Nuklear cross") is a front-end overlay for Nuklear GUI library.
+ *
+ *
  * @mainpage Write one simple code, compile it for any supported frontend.
- * 
+ *
  * Nuklear+ (read as "Nuklear cross") is a front-end overlay for Nuklear GUI library.
- * 
+ *
  * Preprocessor constants:
  * * NKC_IMPLEMENTATION - define this constant in one C-file in your project, or use nuklear_cross.c
  * * NKC_DISABLE_DEFAULT_FONT - if set, the default Nuklear font will not be included. Size reduce
@@ -24,7 +24,7 @@
  * Non-OpenGL frontend:
  * * NKC_GDIP - GDI+ (Windows only). The minimal size. Resulting picture differs from OpenGL!
  * * NKC_XLIB - X11/Xlib. No font loader!
- * 
+ *
  * Not all Window modes are implemented in each frontend.
  * @see nuklear_cross.h
  * @see https://github.com/DeXP/nuklear_cross
@@ -58,29 +58,29 @@
 
 #include "nuklear.h"
 
-
+enum theme {THEME_BLACK, THEME_WHITE, THEME_RED, THEME_BLUE, THEME_DARK};
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/** 
+/**
  * @brief Main structure. Implementation depends on frontend
  * There always will be fields:
  *     struct nk_context *ctx;
  *     int nkcInited;
 */
-struct nkc; 
+struct nkc;
 
-/** 
- * @brief Window mode constants, passed to initialization 
+/**
+ * @brief Window mode constants, passed to initialization
  */
 enum nkc_window_mode {
     NKC_WIN_NORMAL = 'w', /**< normal window mode, user can resize/maximize */
     NKC_WIN_MAXIMIZED = 'm', /**< like normal, but starts maximized */
     NKC_WIN_FIXED = 'x', /**< fixed size mode. User can't resize/maximize */
     NKC_WIN_FULLSCREEN = 'f', /**< real fullscreen. In almost all frontends changes the screen's resolution */
-    NKC_WIN_FULLSCREEN_DESKTOP = 'd' /**< "virtual" fullscreen. Removes windows decorations, 
+    NKC_WIN_FULLSCREEN_DESKTOP = 'd' /**< "virtual" fullscreen. Removes windows decorations,
      * expands window to full size, changes window size */
 };
 #define NKC_INITED 1234  /**< Internal used constant @hideinitializer */
@@ -99,7 +99,7 @@ enum nkc_window_mode {
         #define NKC_OPENGL_VERSION NKC_USE_OPENGL
     #else
         #define NKC_OPENGL_VERSION 2
-    #endif    
+    #endif
 #endif
 
 #include <stdio.h>
@@ -125,7 +125,7 @@ struct nkc_key_event {
 };
 union nkc_event {
     enum nkc_event_type type;
-    struct nkc_window_event window; 
+    struct nkc_window_event window;
     struct nkc_key_event key;
 };
 /* end Events */
@@ -176,8 +176,8 @@ NK_API void* nkc_rdie(const char *fmt, ...);
  * @see enum nkc_window_mode
  * @return if error, than returns NULL
  */
-NK_API struct nk_context *nkc_init(struct nkc* nkcHandle, const char* title, 
-                            int width, int height, enum nkc_window_mode windowMode);
+NK_API struct nk_context *nkc_init(struct nkc* nkcHandle, const char* title,
+                            double width, double height, enum nkc_window_mode windowMode);
 
 /**
  * @brief Poll window's events in a loop
@@ -220,13 +220,13 @@ NK_API void nkc_style_set_font(struct nkc* nkcHandle, const struct nk_user_font*
 
 /**
  * @brief Load font from TTF-file from disk
- * @param size - size of the rendered text in points (ex. 14pt) 
+ * @param size - size of the rendered text in points (ex. 14pt)
  * @param symbolsRange - will be given directly yo Nuklear
  * @return NULL if error
  */
-NK_API struct nk_user_font* nkc_load_font_file(struct nkc* nkcHandle, const char* filename, float size, 
+NK_API struct nk_user_font* nkc_load_font_file(struct nkc* nkcHandle, const char* filename, float size,
                               const nk_rune *symbolsRange);
-NK_API struct nk_user_font* nkc_load_font_memory(struct nkc* nkcHandle, const void* membuf, int membufSize, 
+NK_API struct nk_user_font* nkc_load_font_memory(struct nkc* nkcHandle, const void* membuf, int membufSize,
                               float size, const nk_rune *symbolsRange);
 
 /**
@@ -264,7 +264,7 @@ NK_API int nkc_get_desktop_size(struct nkc* nkcHandle, int* width, int* height);
  *  @brief Required for Emscripten
  *  @{
  */
- 
+
 /**
  * @brief Starts the 'infinite' main loop. Required for Emscipten only.
  * @param mainLoopFunc - pointer to the function, that will be called each loop iteration

@@ -6,7 +6,7 @@
 #    By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/15 01:02:41 by mbrunel           #+#    #+#              #
-#    Updated: 2020/02/18 17:19:16 by mbrunel          ###   ########.fr        #
+#    Updated: 2020/02/19 18:38:03 by mbrunel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,8 @@ C_CYAN=\033[36m
 C_NONE=\033[0m
 SUCCESS_MSG=SUCCESS
 
-SRC=main.c
+SRC=main.c\
+	styles.c
 
 OBJ:=$(patsubst %.c, $(D_OBJ)/%.o, $(SRC))
 DEP:=$(patsubst %.c, $(D_DEP)/%.d, $(SRC))
