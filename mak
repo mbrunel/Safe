@@ -6,7 +6,7 @@
 #    By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/15 01:02:41 by mbrunel           #+#    #+#              #
-#    Updated: 2020/02/20 00:09:24 by mbrunel          ###   ########.fr        #
+#    Updated: 2020/02/18 21:26:33 by mbrunel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,11 +29,22 @@ D_LIBFT=$(D_LIB)/libft
 LIBFT=$(D_LIBFT)/libft.a
 D_NUKLEAR=$(D_LIB)/nuklear
 
+#personal config
+HOME := $(shell echo $(HOME))
+ifeq ($(HOME), '/Users/mbrunel')
+	FT_FLAGS= -DBREW
+endif
+
 CC=gcc
 CFLAGS=-Wall -Wextra #-Werror
 DFLAGS=-MP -MMD -MF $(D_DEP)/$*.d -MT $@
-IFLAGS=-I$(D_INC) -I$(D_LIBFT)/inc -I$(D_NUKLEAR) `sdl2-config --cflags`
-LDFLAGS= $(LIBFT) -Ofast -lm -DNKCD=NKC_SDL -framework OpenGL -framework Cocoa -framework IOKit `sdl2-config --libs`
+
+UNAME_S := $(shell uname -s)
+#ifeq ($(UNAME_S),Darwin)
+	IFLAGS=-I$(D_INC) -I$(D_LIBFT)/inc -I$(D_NUKLEAR) `sdl2-config --cflags` $(FT_FLAGS)
+	LDFLAGS=$(LIBFT) -Ofast -lm -DNKCD=NKC_SDL -framework OpenGL -framework Cocoa -framework IOKit `sdl2-config --libs`
+#else
+#endif
 
 C_RED=\033[31m
 C_GREEN=\033[32m
@@ -41,8 +52,7 @@ C_CYAN=\033[36m
 C_NONE=\033[0m
 SUCCESS_MSG=SUCCESS
 
-SRC=main.c\
-	styles.c
+SRC=main.c
 
 OBJ:=$(patsubst %.c, $(D_OBJ)/%.o, $(SRC))
 DEP:=$(patsubst %.c, $(D_DEP)/%.d, $(SRC))
@@ -55,8 +65,7 @@ $(NAME) : $(GIT) $(OBJ)
 all : $(NAME)
 
 linux : $(GIT)
-	@$(MAKE) -C $(D_LIBFT)
-	gcc $(addprefix $(D_SRC)/, $(SRC)) -O2 -Wall -DNKC_EXAMPLE -DNDEBUG $(LIBFT) -lm -std=c89 -DNKCD=NKC_SDL  -D_REENTRANT -I/usr/local/include/SDL2 -L/usr/local/lib -Wl,-rpath,/usr/local/lib -Wl,--enable-new-dtags -lSDL2 -I/usr/include/libdrm -lGL -o $(NAME) -Ilib/nuklear_linux -Iinc  -Ilib/libft/inc
+	gcc $(D_SRC)/$(SRC) -O2 -Wall -DNKC_EXAMPLE -DNDEBUG -s -lm -std=c89 -DNKCD=NKC_SDL  -D_REENTRANT -I/usr/local/include/SDL2 -L/usr/local/lib -Wl,-rpath,/usr/local/lib -Wl,--enable-new-dtags -lSDL2 -I/usr/include/libdrm -lGL -o $(NAME) -Ilib/nuklear_linux -Iinc  -Ilib/libft/inc
 
 clean :
 	@rm -rf $(BUILD)
