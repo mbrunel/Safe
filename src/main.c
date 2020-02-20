@@ -21,9 +21,12 @@ void init_log(t_log *log)
 
 void aff_unlock(t_front *w)
 {
+	struct nk_image img;
+	img = nkc_load_image_file(w->nkc, "icon/logo.png");
 	nk_layout_row_dynamic(w->nkc->ctx, w->nkc->win_height / 3, 1);
-	nk_layout_row_dynamic(w->nkc->ctx, w->nkc->win_height / 3, 1);
-	nk_label(w->nkc->ctx, "OWEEEEE", NK_TEXT_CENTERED);
+	nk_layout_row_static(w->nkc->ctx, w->nkc->win_width / 7,w->nkc->win_width / 7, 6);
+	nk_spacing(w->nkc->ctx, 3);
+	nk_image(w->nkc->ctx, img);
 }
 
 void aff_login(t_front *w)
@@ -44,8 +47,7 @@ void aff_login(t_front *w)
 		ft_memcpy(w->log->pass + old_len, w->log->masqued + old_len, (nk_size)(w->log->lens[1] - old_len));
 	nk_layout_row_dynamic(w->nkc->ctx, w->nkc->win_height / 10, 1);
 	nk_layout_row_dynamic(w->nkc->ctx, w->nkc->win_height / 15, 5);
-	nk_label(w->nkc->ctx, "", NK_TEXT_RIGHT);
-	nk_label(w->nkc->ctx, "", NK_TEXT_RIGHT);
+	nk_spacing(w->nkc->ctx, 2);
 	if (nk_button_label(w->nkc->ctx, "DONE"))
 		w->stage = UNLOCK;
 }
@@ -58,6 +60,7 @@ void mainLoop(void* loopArg)
 
 	if((e.type == NKC_EWINDOW) && (e.window.param == NKC_EQUIT))
 		nkc_stop_main_loop(w->nkc);
+	SDL_GetWindowSize(w->nkc->window, &(w->nkc->win_width), &(w->nkc->win_height));
 	if (!nk_begin(ctx, "Show", nk_rect(0, 0, w->nkc->win_width, w->nkc->win_height),0))
 		w->stage = ERROR;
 	set_style(w->nkc->ctx, THEME_RED);
@@ -88,7 +91,7 @@ int main()
 	w.log = &log;
 	init_log(w.log);
 	w.stage = LOGIN;
-    if(!nkc_init( w.nkc, "PS manager", 0.4,0.4, NKC_WIN_MAXIMIZED) )
+    if(!nkc_init( w.nkc, "", 0.4,0.4, NKC_WIN_MAXIMIZED) )
 		nkc_shutdown( w.nkc);
 	nkc_set_main_loop(w.nkc, mainLoop, (void*)&w);
 	nkc_shutdown( w.nkc);

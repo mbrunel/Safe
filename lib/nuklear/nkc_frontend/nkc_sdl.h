@@ -195,8 +195,8 @@ NK_API struct nk_context *nkc_init(struct nkc* nkcHandle, const char* title,
     nk_sdl_font_stash_begin(&atlas);
     nk_sdl_font_stash_end();
     glEnable(GL_TEXTURE_2D);
-	// SDL_SetWindowResizable(nkcHandle->window,
-    //                      SDL_TRUE);
+	 SDL_SetWindowResizable(nkcHandle->window,
+                          SDL_TRUE);
 	SDL_DisplayMode DM;
 	SDL_GetCurrentDisplayMode(0, &DM);
 	nkcHandle->win_height = DM.h * height;
