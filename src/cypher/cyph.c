@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/20 21:49:47 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/02/21 03:52:53 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/02/21 14:51:23 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int cyph(unsigned char *key, char *opath, char *newpath)
 		return (-1);
 	ft_memset(buf + status, '\0', 16);
 	aes(expanded, buf);
-	len = add_buf(&file, buf) - 16;
+	len = add_buf(&file, buf) - 32 + status;
 	if ((out = open(newpath, O_WRONLY|O_CREAT|O_TRUNC, S_IRWXU)) == -1)
 		return (-1);
 	write(out, file, len);
