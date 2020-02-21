@@ -6,7 +6,7 @@
 #    By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/15 01:02:41 by mbrunel           #+#    #+#              #
-#    Updated: 2020/02/20 00:09:24 by mbrunel          ###   ########.fr        #
+#    Updated: 2020/02/21 02:59:38 by mbrunel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,6 +44,10 @@ SUCCESS_MSG=SUCCESS
 SRC=main.c\
 	styles.c
 
+D_CYPHER=$(D_SRC)/cypher
+
+CYPHER=cyph.c key_expansion.c
+
 OBJ:=$(patsubst %.c, $(D_OBJ)/%.o, $(SRC))
 DEP:=$(patsubst %.c, $(D_DEP)/%.d, $(SRC))
 
@@ -56,7 +60,11 @@ all : $(NAME)
 
 linux : $(GIT)
 	@$(MAKE) -C $(D_LIBFT)
-	gcc $(addprefix $(D_SRC)/, $(SRC)) -O2 -Wall -DNKC_EXAMPLE -DNDEBUG $(LIBFT) -lm -std=c89 -DNKCD=NKC_SDL  -D_REENTRANT -I/usr/local/include/SDL2 -L/usr/local/lib -Wl,-rpath,/usr/local/lib -Wl,--enable-new-dtags -lSDL2 -I/usr/include/libdrm -lGL -o $(NAME) -Ilib/nuklear_linux -Iinc  -Ilib/libft/inc
+	gcc $(CFLAGS) $(addprefix $(D_SRC)/, $(SRC)) -O2 -Wall $(LIBFT) -lm -DNKCD=NKC_SDL  -D_REENTRANT -I/usr/local/include/SDL2 -L/usr/local/lib -Wl,-rpath,/usr/local/lib -Wl,--enable-new-dtags -lSDL2 -I/usr/include/libdrm -lGL -o $(NAME) -Ilib/nuklear_linux -Iinc  -Ilib/libft/inc
+
+cypher : $(GIT)
+	@$(MAKE) -C $(D_LIBFT)
+	gcc $(D_CYPHER)/main.c $(addprefix $(D_CYPHER)/, $(CYPHER)) $(LIBFT) -Iinc -I$(D_LIBFT)/inc -o cyph
 
 clean :
 	@rm -rf $(BUILD)

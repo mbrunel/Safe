@@ -36,6 +36,9 @@
 *.x86_64
 *.hex
 ps-managerv2
+cyph
+input
+output
 
 # Debug files
 *.dSYM/
