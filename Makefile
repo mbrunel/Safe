@@ -13,7 +13,7 @@
 NAME=ps-managerv2
 AES=aes
 
-GIT=$(D_LIBFT)/.git
+GIT=$(D_LIBFT)/.git $(D_AES)/.git
 
 BUILD=.build
 D_SRC=src
