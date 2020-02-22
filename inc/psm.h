@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 01:28:25 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/02/18 17:26:23 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/02/22 22:37:18 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@
 # include <libft.h>
 # include <errno.h>
 # include <string.h>
+# include <sys/stat.h>
+# include <sys/types.h>
+# include <fcntl.h>
 
 # define RED "\033[31m"
 # define GREEN "\033[32m"

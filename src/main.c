@@ -6,12 +6,13 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/19 18:31:24 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/02/19 18:31:24 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/02/20 05:56:05 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <front.h>
 #include <psm.h>
+#include <aes.h>
 
 void init_log(t_log *log)
 {
@@ -22,11 +23,21 @@ void init_log(t_log *log)
 void aff_unlock(t_front *w)
 {
 	struct nk_image img;
+	struct AES_ctx ctx;
+	unsigned char *key = "1234567890123456";
+	unsigned char buf[] = "1235467890123456";
+
 	img = nkc_load_image_file(w->nkc, "icon/logo.png");
 	nk_layout_row_dynamic(w->nkc->ctx, w->nkc->win_height / 3, 1);
 	nk_layout_row_static(w->nkc->ctx, w->nkc->win_width / 7,w->nkc->win_width / 7, 6);
 	nk_spacing(w->nkc->ctx, 3);
 	nk_image(w->nkc->ctx, img);
+	AES_init_ctx(&ctx, (uint8_t*)key);
+	printf("%s\n", buf);
+	AES_CBC_encrypt_buffer(&ctx, buf, 16);
+	printf("%s\n", buf);
+	AES_CBC_decrypt_buffer(&ctx, buf, 16);
+	printf("%s\n", buf);
 }
 
 void aff_login(t_front *w)

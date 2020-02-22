@@ -6,11 +6,12 @@
 #    By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/15 01:02:41 by mbrunel           #+#    #+#              #
-#    Updated: 2020/02/21 02:59:38 by mbrunel          ###   ########.fr        #
+#    Updated: 2020/02/22 23:10:32 by mbrunel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME=ps-managerv2
+AES=aes
 
 GIT=$(D_LIBFT)/.git
 
@@ -28,12 +29,15 @@ D_LIB=lib
 D_LIBFT=$(D_LIB)/libft
 LIBFT=$(D_LIBFT)/libft.a
 D_NUKLEAR=$(D_LIB)/nuklear
+D_AES=$(D_LIB)/tiny-AES-c
+L_AES=aes.a
+AES=$(D_AES)/$(L_AES)
 
 CC=gcc
 CFLAGS=-Wall -Wextra #-Werror
 DFLAGS=-MP -MMD -MF $(D_DEP)/$*.d -MT $@
-IFLAGS=-I$(D_INC) -I$(D_LIBFT)/inc -I$(D_NUKLEAR) `sdl2-config --cflags`
-LDFLAGS= $(LIBFT) -Ofast -lm -DNKCD=NKC_SDL -framework OpenGL -framework Cocoa -framework IOKit `sdl2-config --libs`
+IFLAGS=-I$(D_INC) -I$(D_LIBFT)/inc -I$(D_NUKLEAR) `sdl2-config --cflags` -I$(D_AES)
+LDFLAGS= $(LIBFT) -Ofast -lm -DNKCD=NKC_SDL -framework OpenGL -framework Cocoa -framework IOKit `sdl2-config --libs` $(AES)
 
 C_RED=\033[31m
 C_GREEN=\033[32m
@@ -44,15 +48,12 @@ SUCCESS_MSG=SUCCESS
 SRC=main.c\
 	styles.c
 
-D_CYPHER=$(D_SRC)/cypher
-
-CYPHER=cyph.c key_expansion.c
-
 OBJ:=$(patsubst %.c, $(D_OBJ)/%.o, $(SRC))
 DEP:=$(patsubst %.c, $(D_DEP)/%.d, $(SRC))
 
 $(NAME) : $(GIT) $(OBJ)
 	@$(MAKE) -C $(D_LIBFT)
+	@$(MAKE) -C $(D_AES) $(L_AES)
 	@$(CC) $(OBJ) $(LDFLAGS) -o $(NAME)
 	@printf "\n%s\t\t$(C_GREEN)[$(SUCCESS_MSG)]$(C_NONE)\n\n" $@
 
@@ -60,11 +61,8 @@ all : $(NAME)
 
 linux : $(GIT)
 	@$(MAKE) -C $(D_LIBFT)
-	gcc $(CFLAGS) $(addprefix $(D_SRC)/, $(SRC)) -O2 -Wall $(LIBFT) -lm -DNKCD=NKC_SDL  -D_REENTRANT -I/usr/local/include/SDL2 -L/usr/local/lib -Wl,-rpath,/usr/local/lib -Wl,--enable-new-dtags -lSDL2 -I/usr/include/libdrm -lGL -o $(NAME) -Ilib/nuklear_linux -Iinc  -Ilib/libft/inc
-
-cypher : $(GIT)
-	@$(MAKE) -C $(D_LIBFT)
-	gcc $(D_CYPHER)/main.c $(addprefix $(D_CYPHER)/, $(CYPHER)) $(LIBFT) -Iinc -I$(D_LIBFT)/inc -o cyph
+	@$(MAKE) -C $(D_AES)
+	gcc $(CFLAGS) $(addprefix $(D_SRC)/, $(SRC)) -O2 -Wall $(AES) -I$(D_AES) $(LIBFT) -lm -DNKCD=NKC_SDL  -D_REENTRANT -I/usr/local/include/SDL2 -L/usr/local/lib -Wl,-rpath,/usr/local/lib -Wl,--enable-new-dtags -lSDL2 -I/usr/include/libdrm -lGL -o $(NAME) -Ilib/nuklear_linux -Iinc  -Ilib/libft/inc
 
 clean :
 	@rm -rf $(BUILD)
@@ -75,6 +73,8 @@ fclean : clean
 	@printf "\nrm %s\t\t$(C_GREEN)[$(SUCCESS_MSG)]$(C_NONE)\n" $(NAME)
 	@$(MAKE) -C $(D_LIBFT) fclean
 	@printf "\nrm %s\t$(C_GREEN)[$(SUCCESS_MSG)]$(C_NONE)\n" $(LIBFT)
+	@$(MAKE) -C $(D_AES) clean
+	@printf "\nrm %s\t$(C_GREEN)[$(SUCCESS_MSG)]$(C_NONE)\n" $(AES)
 
 re : fclean all
 
