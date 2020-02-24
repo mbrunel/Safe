@@ -10,7 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <front.h>
+# ifndef NKC_IMPLEMENTATION
+#  define NKC_IMPLEMENTATION
+# endif
+
 #include <psm.h>
 #include <aes.h>
 
@@ -20,27 +23,31 @@ void init_log(t_log *log)
 	ft_memset(log->masqued, '*', 256);
 }
 
-void aff_unlock(t_front *w)
+void aff_loading(t_world *w)
 {
 	struct nk_image img;
-	struct AES_ctx ctx;
-	unsigned char *key = "1234567890123456";
-	unsigned char buf[] = "1235467890123456";
 
 	img = nkc_load_image_file(w->nkc, "icon/logo.png");
 	nk_layout_row_dynamic(w->nkc->ctx, w->nkc->win_height / 3, 1);
 	nk_layout_row_static(w->nkc->ctx, w->nkc->win_width / 7,w->nkc->win_width / 7, 6);
 	nk_spacing(w->nkc->ctx, 3);
 	nk_image(w->nkc->ctx, img);
-	AES_init_ctx(&ctx, (uint8_t*)key);
-	printf("%s\n", buf);
-	AES_CBC_encrypt_buffer(&ctx, buf, 16);
-	printf("%s\n", buf);
-	AES_CBC_decrypt_buffer(&ctx, buf, 16);
-	printf("%s\n", buf);
 }
 
-void aff_login(t_front *w)
+void load(t_world *w, void *fct)
+{
+	static int boo = 0;
+	pthread_t thread;
+
+	if (!boo)
+	{
+		boo = 1;
+		pthread_create(&thread, NULL, fct, w);
+	}
+	aff_loading(w);
+}
+
+void aff_login(t_world *w)
 {
 	int old_len = w->log->lens[1];
 	int i = 0;
@@ -60,12 +67,17 @@ void aff_login(t_front *w)
 	nk_layout_row_dynamic(w->nkc->ctx, w->nkc->win_height / 15, 5);
 	nk_spacing(w->nkc->ctx, 2);
 	if (nk_button_label(w->nkc->ctx, "DONE"))
-		w->stage = UNLOCK;
+		w->stage++;
+}
+
+void aff_dashboard(t_world *w)
+{
+
 }
 
 void mainLoop(void* loopArg)
 {
-	t_front *w = (t_front*)loopArg;
+	t_world *w = (t_world*)loopArg;
 	struct nk_context *ctx = nkc_get_ctx(w->nkc);
 	union nkc_event e = nkc_poll_events(w->nkc);
 
@@ -82,7 +94,11 @@ void mainLoop(void* loopArg)
 		break ;
 
 		case UNLOCK:
-		aff_unlock(w);
+		load(w, &set_up_db);
+		break ;
+
+		case DASHBOARD:
+		aff_dashboard(w);
 		break ;
 
 		default:
@@ -92,17 +108,21 @@ void mainLoop(void* loopArg)
 	nkc_render(w->nkc, nk_rgb(40,40,40) );
 }
 
-int main()
+int main(int ac, char *av[], char *env[])
 {
-    struct nkc	nkcx;
-	t_front		w;
+	struct nkc	nkcx;
+	t_world		w;
 	t_log		log;
 
+	if (ac != 1 || av[1])
+		exit(0);
 	w.nkc = &nkcx;
 	w.log = &log;
 	init_log(w.log);
 	w.stage = LOGIN;
-    if(!nkc_init( w.nkc, "", 0.4,0.4, NKC_WIN_MAXIMIZED) )
+	w.db.env = env;
+
+	if(!nkc_init( w.nkc, "", 0.4,0.4, NKC_WIN_MAXIMIZED) )
 		nkc_shutdown( w.nkc);
 	nkc_set_main_loop(w.nkc, mainLoop, (void*)&w);
 	nkc_shutdown( w.nkc);
