@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/19 18:31:24 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/02/20 05:56:05 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/02/29 06:22:50 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ void mainLoop(void* loopArg)
 		break ;
 	}
 	nk_end(ctx);
-	nkc_render(w->nkc, nk_rgb(40,40,40) );
+	nkc_render(w->nkc, nk_rgb(40,40,40));
 }
 
 int main(int ac, char *av[], char *env[])
@@ -122,9 +122,8 @@ int main(int ac, char *av[], char *env[])
 	w.stage = LOGIN;
 	w.db.env = env;
 
-	if(!nkc_init( w.nkc, "", 0.4,0.4, NKC_WIN_MAXIMIZED) )
-		nkc_shutdown( w.nkc);
-	nkc_set_main_loop(w.nkc, mainLoop, (void*)&w);
+	if(nkc_init( w.nkc, "", 0.4,0.4, NKC_WIN_MAXIMIZED))
+		nkc_set_main_loop(w.nkc, mainLoop, (void*)&w);
 	nkc_shutdown( w.nkc);
-	return (0);
+	exit(0);
 }
