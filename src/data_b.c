@@ -6,67 +6,98 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 18:17:17 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/02/29 06:44:48 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/01 06:49:42 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <psm.h>
 
-t_lst *create_lst(void)
+int recup_size(int fd)
 {
-	t_lst *new;
+	char c[13];
+	int i = -1;
 
-	if (!(new = malloc(sizeof(t_lst))))
-		return (NULL);
-	new->line = NULL;
-	new->next = NULL;
-	return (new);
+	while (read(fd, c + ++i, 1))
+		if (!ft_isdigit(c[i]))
+			break ;
+	c[i] = '\0';
+	return (ft_atoi(c));
 }
 
-uint8_t *gen_iv()
+void assign(t_world *w, char *buf, int size)
 {
-	uint8_t *rt;
-	int i;
-
-	if (!(rt = malloc(sizeof(uint8_t) * 8)))
-		return (NULL);
-	srandom(time(NULL));
-	for (i = 0; i < 16; i++)
-		rt[i] = random();
-	return (rt);
+	int i = -1;
+	t_lst *node;
+	w->l = create_lst();
+	node = w->l;
+	printf("%d\n", size);
+	while (i < size -1)
+	{
+		while (buf[++i])
+			node->acc[i] = buf[i];
+		node->acc[i] = '\0';
+		while (buf[++i])
+			node->name[i] = buf[i];
+		node->name[i] = '\0';
+		while (buf[++i])
+			node->email[i] = buf[i];
+		node->email[i] = '\0';
+		while (buf[++i])
+			node->pass[i] = buf[i];
+		node->pass[i] = '\0';
+		node->next = create_lst();
+		printf("%s, %s, %s\n", node->acc, node->name, node->pass);
+		node = node->next;
+	}
 }
 
 void *set_up_db(void *arg)
 {
 	void *tmp;
 	char *name;
-	char *line;
 	t_world *w = (t_world*)arg;
+	uint8_t iv[16];
+	char	*buf;
+	int		size;
 
-	AES_init_ctx(&w->ctx_aes, w->log->pass);
+	ft_strcpy(w->log->pass, "012345789123456");
+	AES_init_ctx(w->ctx_aes, (uint8_t*)w->log->pass);
 	name = ft_strjoin(getenv("HOME"), "/.safe/");
-	if (call(w->db.env, "/bin/mkdir", "-p", "-m", "00700", name, NULL))
+	if (call(w->env, "/bin/mkdir", "-p", "-m", "00700", name, NULL))
 		return (NULL);
-	tmp = name; name = ft_strjoin(name, w->log->login);
+	tmp = name;
+	name = ft_strjoin(name, w->log->login);
+	w->home = ft_strdup(name);
 	free(tmp);
-	if (call(w->db.env, "/bin/mkdir", "-p", "-m", "00700", name, NULL))
+	if (call(w->env, "/bin/mkdir", "-p", "-m", "00700", name, NULL))
 		return (NULL);
 	tmp = name;
 	name = ft_strjoin(name, "/passwd");
 	free(tmp);
 	int fd = open(name, O_RDWR|O_CREAT|O_APPEND, 00700);
-	if (ft_get_next_line(fd, &line))
+	if (read(fd, iv, 16) != 16)
 	{
-		w->db.iv = line;
-		AES_ECB_decrypt(&w->ctx_aes, (uint8_t*)w->db.iv);
+		gen_iv(iv);
+		AES_ECB_encrypt(w->ctx_aes, iv);
+		write(fd, (char*)iv, 16);
+		write(fd, "0\0", 2);
+		w->l = NULL;
+		w->stage++;
+		return (arg);
 	}
-	else
-	{
-		free(line);
-		line = ft_strdup(w->db.iv = gen_iv());
-		AES_ECB_encrypt(&w->ctx_aes, line);
-		ft_dprintf(fd, "%s\n", (char*)line);
-	}
+	AES_ECB_decrypt(w->ctx_aes, (uint8_t*)iv);
+	AES_ctx_set_iv(w->ctx_aes, iv);
+	size = recup_size(fd);
+	buf = calloc(size, sizeof(char));
+	read(fd, buf, size);
+	AES_CBC_decrypt_buffer(w->ctx_aes, (uint8_t*)buf, size);
+	assign(w, buf, size);
 	w->stage++;
 	return (arg);
+}
+
+void save_chng(t_world *w)
+{
+	char *name = ft_strjoin(w->home, "/swap");
+	int fd = open(name, O_RDWR|O_CREAT|O_APPEND, 00700);
 }

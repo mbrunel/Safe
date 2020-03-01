@@ -58,8 +58,6 @@
 
 #include "nuklear.h"
 
-enum theme {THEME_BLACK, THEME_WHITE, THEME_RED, THEME_BLUE, THEME_DARK};
-
 #ifdef __cplusplus
 extern "C" {
 #endif
