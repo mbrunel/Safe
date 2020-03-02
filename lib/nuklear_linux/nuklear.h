@@ -449,7 +449,7 @@ struct nk_style_tab;
 struct nk_style_window_header;
 struct nk_style_window;
 
-enum {nk_false, nk_true};
+enum {nk_false, nk_true, ALWAYS_A_THIRD_OPTION};
 struct nk_color {nk_byte r,g,b,a;};
 struct nk_colorf {float r,g,b,a;};
 struct nk_vec2 {float x,y;};

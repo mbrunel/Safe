@@ -6,28 +6,16 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 01:28:25 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/01 06:43:05 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/02 13:25:10 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PSM_H
 # define PSM_H
 
-# include <front.h>
-# include <utils.h>
+# include "utils.h"
 
-# include <aes.h>
-
-# include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
-# include <libft.h>
-# include <errno.h>
-# include <string.h>
-# include <sys/stat.h>
-# include <sys/types.h>
-# include <fcntl.h>
-# include <pthread.h>
+# include "nuklear_cross.h"
 
 # define RED "\033[31m"
 # define GREEN "\033[32m"
@@ -39,6 +27,17 @@
 # define PREFIX 5
 # define LEN_MAX 99999
 
+enum stage 				{ERROR, LOGIN, DASHBOARD, ONE, NEW, NB};
+
+typedef struct			s_log
+{
+	char				login[256];
+	unsigned char		pass[32];
+	char				check[256];
+	char				masqued[256];
+	int					lens[10];
+}						t_log;
+
 typedef struct			s_world
 {
 	t_log				*log;
@@ -49,9 +48,20 @@ typedef struct			s_world
 	void				*env;
 	t_lst				*one;
 	t_lst				*backup;
+	t_lst				*prev;
 	char				*home;
 }						t_world;
 
-void	*set_up_db(void *arg);
-void	save_chng(t_world *w);
+void					set_style(struct nk_context *ctx, enum theme theme);
+
+void					*set_up_db(void *arg);
+void					*save_chng(t_world *w);
+
+void					aff_error(t_world *w);
+void					aff_login(t_world *w);
+void					aff_one(t_world *w);
+void					aff_new(t_world *w);
+void					aff_dashboard(t_world *w);
+void					aff_loading(t_world *w);
+
 #endif

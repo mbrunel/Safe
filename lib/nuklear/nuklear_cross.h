@@ -338,7 +338,7 @@ NK_API void nkc_set_main_loop(struct nkc* nkcHandle,
 }
 
 NK_API void nkc_stop_main_loop(struct nkc* nkcHandle){
-    nkcHandle->keepRunning = nk_false;
+    nkcHandle->keepRunning = ALWAYS_A_THIRD_OPTION;
 }
 #endif /* __EMSCRIPTEN__ */
 
