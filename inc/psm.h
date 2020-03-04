@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 01:28:25 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/02 13:25:10 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/04 12:20:09 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ typedef struct			s_world
 	t_lst				*backup;
 	t_lst				*prev;
 	char				*home;
+	int					destruct;
 }						t_world;
 
 void					set_style(struct nk_context *ctx, enum theme theme);

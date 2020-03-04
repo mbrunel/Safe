@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 18:22:17 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/02 14:31:15 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/04 07:49:23 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,6 @@ uint8_t  *gen_iv(uint8_t  *rt)
 {
 	int i;
 
-	if (!(rt = malloc(sizeof(u_int8_t) * 8)))
-		return (NULL);
 	srandom(time(NULL));
 	for (i = 0; i < 16; i++)
 		rt[i] = random();

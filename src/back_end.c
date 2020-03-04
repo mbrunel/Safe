@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 18:17:17 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/02 14:07:48 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/04 08:03:08 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ int assign(t_world *w, char *buf)
 		w->l = NULL;
 	else
 		prev->next = NULL;
+	free(buf);
 	return (0);
 }
 
@@ -160,48 +161,46 @@ void *set_up_db(void *arg)
 		return (NULL);
 	}
 	w->stage = DASHBOARD;
+	free(name);
 	return (arg);
 }
 
 void *save_chng(t_world *w)
 {
-	char *name;
-	char *new;
+	char *name = NULL, *new = NULL, *salt = NULL, *s_len = NULL;
 	int fd;
 	unsigned char buf[4096] = {0};
 	t_lst *node = w->l;
 	t_lst *tmp;
 	int i = 0;
 	int padd;
-	char *s_len;
 	uint8_t iv[16];
 	unsigned char new_h[32];
-	char *salt;
 	char conc[32];
 
 	if (!w->home)
 		exit(0);
-	if (!(name = strjoin(w->home, "/swap")))
+	if (!(name = strjoin(w->home, "/swap")) || !(new = strjoin(w->home, "/passwd")) || !(salt = gen_pass(-1, 32)))
 	{
+		free(w->home);
+		if (name)
+			free(name);
+		if (new)
+			free(new);
 		w->stage = ERROR;
 		return (NULL);
 	}
-	if (!(new = strjoin(w->home, "/passwd")))
-	{
-		w->stage = ERROR;
-		return (NULL);
-	}
+	free(w->home);
 	if ((fd = open(name, O_WRONLY|O_CREAT|O_TRUNC, 00700)) == -1)
 	{
 		w->stage = ERROR;
 		return (NULL);
 	}
-	salt = gen_pass(-1, 32);
 	for (int j = 0; j < 32; j++)
 		conc[j] = w->log->pass[j] ^ salt[j];
 	write(fd, salt, 32);
-	sha256_string(w->log->pass, new_h);
 	free(salt);
+	sha256_string(w->log->pass, new_h);
 	write(fd, new_h, 32);
 	gen_iv(iv);
 	AES_ctx_set_iv(w->ctx_aes, iv);
@@ -239,7 +238,6 @@ void *save_chng(t_world *w)
 		w->stage = ERROR;
 		return (NULL);
 	}
-	free(w->home);
 	free(name);
 	free(new);
 	return (NULL);

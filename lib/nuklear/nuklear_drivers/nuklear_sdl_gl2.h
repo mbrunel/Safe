@@ -257,6 +257,8 @@ nk_sdl_handle_event(SDL_Event *evt)
             nk_input_key(ctx, NK_KEY_DEL, down);
         else if (sym == SDLK_RETURN)
             nk_input_key(ctx, NK_KEY_ENTER, down);
+		else if (sym == SDLK_ESCAPE)
+			nk_input_key(ctx, NK_KEY_ESC, down);
         else if (sym == SDLK_TAB)
             nk_input_key(ctx, NK_KEY_TAB, down);
         else if (sym == SDLK_BACKSPACE)

@@ -51,11 +51,11 @@ int main(int ac, char *av[], char *env[])
 
 	if (ac != 1 || av[1])
 		exit(0);
-	w = (t_world){&log, &nkcx, LOGIN, NULL, &aes, env, NULL, NULL, NULL, NULL};
+	w = (t_world){&log, &nkcx, LOGIN, NULL, &aes, env, NULL, NULL, NULL, NULL, 1};
 	memset(w.log->login, 0, 256);
 	memset(w.log->check, 0, 256);
 	if(nkc_init( w.nkc, "", 0.4,0.4, NKC_WIN_MAXIMIZED))
 		nkc_set_main_loop(w.nkc, mainLoop, (void*)&w);
 	nkc_shutdown( w.nkc);
-	exit(0);
+	return (0);
 }

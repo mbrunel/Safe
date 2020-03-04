@@ -27,7 +27,7 @@
         #include </Users/mbrunel/.brew/include/SDL2//SDL_opengles2.h>*/
         #include <GLES2/gl2.h>
     #else
-        #include </Users/mbrunel/.brew/include/SDL2//SDL_opengl.h>
+        #include </Users/mbrunel/.brew/include/SDL2/SDL_opengl.h>
     #endif
 
     struct nkc {
