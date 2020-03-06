@@ -18,6 +18,14 @@
 
 #include "aes.h"
 
+void load_img(t_world *w)
+{
+	w->img->hide = nkc_load_image_file(w->nkc, "./icon/view_hide_icon.png");
+	w->img->show = nkc_load_image_file(w->nkc, "./icon/view_show_icon.png");
+	w->img->cpy = nkc_load_image_file(w->nkc, "./icon/cpy.png");
+	w->img->reroll = nkc_load_image_file(w->nkc, "./icon/reroll.png");
+}
+
 void mainLoop(void* loopArg)
 {
 	t_world				*w = (t_world*)loopArg;
@@ -46,16 +54,20 @@ int main(int ac, char *av[], char *env[])
 {
 	struct nkc		nkcx;
 	struct AES_ctx	aes;
+	t_img			 img;
 	t_world			w;
 	t_log			log;
 
 	if (ac != 1 || av[1])
 		exit(0);
-	w = (t_world){&log, &nkcx, LOGIN, NULL, &aes, env, NULL, NULL, NULL, NULL, 1};
+	w = (t_world){&img, &log, &nkcx, LOGIN, NULL, &aes, env, NULL, NULL, NULL, NULL};
 	memset(w.log->login, 0, 256);
 	memset(w.log->check, 0, 256);
 	if(nkc_init( w.nkc, "", 0.4,0.4, NKC_WIN_MAXIMIZED))
+	{
+		load_img(&w);
 		nkc_set_main_loop(w.nkc, mainLoop, (void*)&w);
+	}
 	nkc_shutdown( w.nkc);
 	return (0);
 }

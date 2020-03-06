@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 18:22:17 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/04 07:49:23 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/06 06:51:06 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,4 +189,20 @@ void sha256_string(unsigned char *string, unsigned char hash[32])
 	SHA256_Init(&sha256);
 	SHA256_Update(&sha256, string, strlen((char*)string));
 	SHA256_Final(hash, &sha256);
+}
+
+char *new_pass(char *str)
+{
+	int mode = 0;
+	int i = -1;
+
+	while (str[++i])
+	{
+		if (!mode && !isalpha(str[i]))
+			mode = 1;
+		if (mode != 2 && isspecial(str[i]))
+			mode = 2;
+	}
+	free(str);
+	return (gen_pass(mode, i));
 }

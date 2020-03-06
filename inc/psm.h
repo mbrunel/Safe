@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 01:28:25 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/04 12:20:09 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/06 06:24:19 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,17 @@ typedef struct			s_log
 	int					lens[10];
 }						t_log;
 
+typedef struct			s_img
+{
+	struct nk_image		show;
+	struct nk_image		hide;
+	struct nk_image		cpy;
+	struct nk_image		reroll;
+}						t_img;
+
 typedef struct			s_world
 {
+	t_img				*img;
 	t_log				*log;
 	struct nkc			*nkc;
 	int					stage;
@@ -50,7 +59,6 @@ typedef struct			s_world
 	t_lst				*backup;
 	t_lst				*prev;
 	char				*home;
-	int					destruct;
 }						t_world;
 
 void					set_style(struct nk_context *ctx, enum theme theme);

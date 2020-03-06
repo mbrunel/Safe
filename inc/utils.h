@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/01 02:08:00 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/02 12:07:36 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/06 06:27:51 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,6 @@ void					copy_osx(char *buf, char *env[]);
 char					*itoa(int n);
 char					*strjoin(char const *s1, char const *s2);
 void					sha256_string(unsigned char *string, unsigned char outputBuffer[65]);
+char					*new_pass(char *str);
 
 #endif
