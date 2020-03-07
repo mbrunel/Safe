@@ -6,13 +6,13 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 18:17:17 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/06 20:00:00 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/07 07:02:14 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "psm.h"
 
-#include <aes.h>
+#include "aes.h"
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -78,15 +78,14 @@ void *set_up_db(void *arg)
 	t_world *w = (t_world*)arg;
 	unsigned char old_h[32];
 	unsigned char new_h[32];
-	char unsigned *buf;
+	unsigned char *buf;
 	int		size;
 	int fd;
 	uint8_t iv[16];
-	char salt[32];
-	//char conc[32];
+	unsigned char salt[33];
+	unsigned char conc[33];
+	int i = -1;
 
-	sha256_string((unsigned char*)w->log->check, w->log->pass);
-	AES_init_ctx(w->ctx_aes, (uint8_t*)w->log->pass);
 	if (!(name = strjoin(getenv("HOME"), "/.safe/")))
 	{
 		w->stage = ERROR;
@@ -124,15 +123,20 @@ void *set_up_db(void *arg)
 		w->stage++;
 		return (arg);
 	}
-	/*for (int j = 0; j < 32; j++)
-		conc[j] = w->log->pass[j] ^ salt[j];*/
+	salt[32] = 0;
+	while (w->log->check[++i] && salt[i])
+		conc[i] = w->log->check[i] ^ salt[i];
+	conc[i] = '\0';
+	sha256_string((unsigned char*)conc, w->log->pass);
+	AES_init_ctx(w->ctx_aes, (uint8_t*)w->log->pass);
 	if (read(fd, old_h, 32) != 32)
 	{
 		w->stage = ERROR;
 		return (NULL);
 	}
+	w->log->pass[32] = '\0';
 	sha256_string(w->log->pass, new_h);
-	for (int i = 0; i < 32; i++)
+	for (i = 0; i < 32; i++)
 		if (old_h[i] != new_h[i])
 			exit(0);
 	if (read(fd, iv, 16) != 16)
@@ -176,11 +180,13 @@ void *save_chng(t_world *w)
 	int padd;
 	uint8_t iv[16];
 	unsigned char new_h[32];
-	//char conc[32];
+	unsigned char new_pass[33];
+	unsigned char conc[33];
+	int j = -1;
 
 	if (!w->home)
 		exit(0);
-	if (!(name = strjoin(w->home, "/swap")) || !(new = strjoin(w->home, "/passwd")) || !(salt = gen_pass(ASCII, 32)))
+	if (!(name = strjoin(w->home, "/swap")) || !(new = strjoin(w->home, "/passwd")) || !(salt = gen_pass(GRAPH, 32)))
 	{
 		free(w->home);
 		if (name)
@@ -196,11 +202,15 @@ void *save_chng(t_world *w)
 		w->stage = ERROR;
 		return (NULL);
 	}
-	/*for (int j = 0; j < 32; j++)
-		conc[j] = w->log->pass[j] ^ salt[j];*/
 	write(fd, salt, 32);
+	while (w->log->check[++j])
+		conc[j] = w->log->check[j] ^ salt[j];
+	conc[j] = '\0';
+	sha256_string((unsigned char*)conc, new_pass);
+	new_pass[32] = '\0';
 	free(salt);
-	sha256_string(w->log->pass, new_h);
+	AES_init_ctx(w->ctx_aes, (uint8_t*)new_pass);
+	sha256_string(new_pass, new_h);
 	write(fd, new_h, 32);
 	gen_iv(iv);
 	AES_ctx_set_iv(w->ctx_aes, iv);

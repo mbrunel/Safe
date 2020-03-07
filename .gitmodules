@@ -1,7 +1,0 @@
-[submodule "lib/libft"]
-	path = lib/libft
-	url = https://github.com/ChuOkupai/libft.git
-
-[submodule "lib/tiny-AES-c"]
-	path = lib/tiny-AES-c
-	url = https://github.com/kokke/tiny-AES-c.git

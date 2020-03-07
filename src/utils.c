@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 18:22:17 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/06 20:01:11 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/07 05:25:11 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,53 +145,56 @@ char	*strjoin(char const *s1, char const *s2)
 
 char *gen_pass(int mode, int len)
 {
-	char *str;
-	int check;
-	int i = -1;
-	int digit = 0;
-	int alpha = 0;
-	char c;
+	char *upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	char *lower = "abcdefghijklmnopqrstuvwxyz";
+	char *digit = "0123456789";
+	char *spec =  "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+	int nb_digits = 0;
+	int nb_lower = 0;
+	int nb_upper = 0;
+	int nb_spec = 0;
+	int type;
+	char *new;
+	int i = 0;
 
-	if (!(str = malloc(sizeof(uint8_t) * len)))
-		return (NULL);
 	srandom(time(NULL));
-	while (++i < len)
+	if (!(new = malloc(sizeof(uint8_t) * (len + 1))))
+		return (NULL);
+	if (mode == NUM)
+		nb_digits = len;
+	else if (mode == ALNUM)
 	{
-		if (mode == NUM)
-			while (!isdigit(c = random()));
-		else if (mode == ALNUM)
-			while (!isalnum(c = random()));
-		else if (mode == GRAPH)
-			while (!isgraph(c = random()));
-		else
-			c = random() % 0x7f;
-		str[i] = c;
+		nb_lower = len / 3;
+		nb_upper = nb_lower;
+		nb_digits = len - nb_upper - nb_lower;
 	}
-	str[i] = '\0';
-	if (mode == ASCII)
-		return (str);
-	i = -1;
-	check = 0;
-	while (str[++i])
+	else if (mode == GRAPH)
 	{
-		if (!digit && !isdigit(str[i]))
-			digit = 1;
-		if (!alpha && !isalpha(str[i]))
-			alpha = 1;
-		if (!check && isdigit(str[i]))
-			check = 1;
-		if (check != 2 && isalnum(str[i]))
-			check = 2;
+		nb_spec = len / 4;
+		nb_lower = nb_spec;
+		nb_upper = nb_spec;
+		nb_digits = len - (3 * nb_spec);
 	}
-	printf("%d %d %d\n", digit, alpha, check);
-	if (check == 1 && !digit)
-		check = -1;
-	if (check == 2 && (!digit || !alpha))
-		check = -1;
-	if (check == mode)
-		return (str);
-	free(str);
-	return (gen_pass(mode, len));
+	else
+	{
+		while (++i < len)
+			new[i] = random() % 0x7f;
+		return (new);
+	}
+	while (i < len)
+	{
+		type = random() % 4;
+		if (type == 0 && nb_digits-- > 0)
+			new[i++] = digit[random() % 10];
+		if (type == 1 && nb_lower-- > 0)
+			new[i++] = lower[random() % 26];
+		if (type == 2 && nb_upper-- > 0)
+			new[i++] = upper[random() % 26];
+		if (type == 3 && nb_spec-- > 0)
+			new[i++] = spec[random() % 32];
+	}
+	new[i] = '\0';
+	return (new);
 }
 
 void copy_osx(char *buf, char *env[])
@@ -229,7 +232,6 @@ char *new_pass(char *str)
 		if (mode != 2 && isalnum(str[i]))
 			mode = 2;
 	}
-	printf("HOP\n");
 	free(str);
 	return (gen_pass(mode, i));
 }

@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 01:28:25 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/06 06:24:19 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/07 06:34:50 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ enum stage 				{ERROR, LOGIN, DASHBOARD, ONE, NEW, NB};
 typedef struct			s_log
 {
 	char				login[256];
-	unsigned char		pass[32];
+	unsigned char		pass[33];
 	char				check[256];
 	char				masqued[256];
 	int					lens[10];
