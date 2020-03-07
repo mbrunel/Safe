@@ -6,7 +6,7 @@
 #    By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/15 01:02:41 by mbrunel           #+#    #+#              #
-#    Updated: 2020/03/02 14:28:31 by mbrunel          ###   ########.fr        #
+#    Updated: 2020/03/06 17:09:44 by mbrunel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,8 +61,8 @@ $(NAME) : $(SSL) $(GIT) $(OBJ)
 all : $(NAME)
 
 linux : $(GIT)
-	@$(MAKE) -C $(D_AES)
-	gcc $(CFLAGS) $(addprefix $(D_SRC)/, $(SRC)) -O2 -Wall $(AES) -I$(D_AES) -lm -DNKCD=NKC_SDL  -D_REENTRANT -I/usr/local/include/SDL2 -L/usr/local/lib -Wl,-rpath,/usr/local/lib -Wl,--enable-new-dtags -lSDL2 -I/usr/include/libdrm -lGL -o $(NAME) -Ilib/nuklear_linux -Iinc
+	@$(MAKE) -C $(D_AES) $(L_AES)
+	gcc $(CFLAGS) $(addprefix $(D_SRC)/, $(SRC)) -O2 -Wall $(AES) -I$(D_AES) -lm -DNKCD=NKC_SDL `pkg-config openssl --cflags --libs` `pkg-config sdl2 --cflags --libs` -L/usr/local/lib -Wl,-rpath,/usr/local/lib -Wl,--enable-new-dtags -I/usr/include/libdrm -lGL -o $(NAME) -Ilib/nuklear_linux -Iinc
 
 clean :
 	@rm -rf $(BUILD)

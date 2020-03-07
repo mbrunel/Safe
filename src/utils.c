@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 18:22:17 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/06 06:51:06 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/06 20:01:11 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <unistd.h>
 # include <ctype.h>
 # include <time.h>
-# include <strings.h>
+# include <string.h>
 # include <openssl/ssl.h>
 
 void	set_std(int in, int out)
@@ -146,7 +146,10 @@ char	*strjoin(char const *s1, char const *s2)
 char *gen_pass(int mode, int len)
 {
 	char *str;
+	int check;
 	int i = -1;
+	int digit = 0;
+	int alpha = 0;
 	char c;
 
 	if (!(str = malloc(sizeof(uint8_t) * len)))
@@ -165,7 +168,30 @@ char *gen_pass(int mode, int len)
 		str[i] = c;
 	}
 	str[i] = '\0';
-	return (str);
+	if (mode == ASCII)
+		return (str);
+	i = -1;
+	check = 0;
+	while (str[++i])
+	{
+		if (!digit && !isdigit(str[i]))
+			digit = 1;
+		if (!alpha && !isalpha(str[i]))
+			alpha = 1;
+		if (!check && isdigit(str[i]))
+			check = 1;
+		if (check != 2 && isalnum(str[i]))
+			check = 2;
+	}
+	printf("%d %d %d\n", digit, alpha, check);
+	if (check == 1 && !digit)
+		check = -1;
+	if (check == 2 && (!digit || !alpha))
+		check = -1;
+	if (check == mode)
+		return (str);
+	free(str);
+	return (gen_pass(mode, len));
 }
 
 void copy_osx(char *buf, char *env[])
@@ -198,11 +224,12 @@ char *new_pass(char *str)
 
 	while (str[++i])
 	{
-		if (!mode && !isalpha(str[i]))
+		if (!mode && isdigit(str[i]))
 			mode = 1;
-		if (mode != 2 && isspecial(str[i]))
+		if (mode != 2 && isalnum(str[i]))
 			mode = 2;
 	}
+	printf("HOP\n");
 	free(str);
 	return (gen_pass(mode, i));
 }

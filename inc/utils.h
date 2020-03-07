@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/01 02:08:00 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/06 06:27:51 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/06 20:00:14 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 #include <stdint.h>
 
-enum pass 				{NUM, ALNUM, GRAPH};
+enum pass 				{NUM, ALNUM, GRAPH, ASCII};
 
 enum theme				{THEME_BLACK, THEME_WHITE, THEME_RED, THEME_BLUE, THEME_DARK, THEME_GREEN, THEME_YELLOW};
 

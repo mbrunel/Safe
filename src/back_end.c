@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 18:17:17 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/04 08:03:08 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/06 20:00:00 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void *set_up_db(void *arg)
 	int fd;
 	uint8_t iv[16];
 	char salt[32];
-	char conc[32];
+	//char conc[32];
 
 	sha256_string((unsigned char*)w->log->check, w->log->pass);
 	AES_init_ctx(w->ctx_aes, (uint8_t*)w->log->pass);
@@ -124,8 +124,8 @@ void *set_up_db(void *arg)
 		w->stage++;
 		return (arg);
 	}
-	for (int j = 0; j < 32; j++)
-		conc[j] = w->log->pass[j] ^ salt[j];
+	/*for (int j = 0; j < 32; j++)
+		conc[j] = w->log->pass[j] ^ salt[j];*/
 	if (read(fd, old_h, 32) != 32)
 	{
 		w->stage = ERROR;
@@ -176,11 +176,11 @@ void *save_chng(t_world *w)
 	int padd;
 	uint8_t iv[16];
 	unsigned char new_h[32];
-	char conc[32];
+	//char conc[32];
 
 	if (!w->home)
 		exit(0);
-	if (!(name = strjoin(w->home, "/swap")) || !(new = strjoin(w->home, "/passwd")) || !(salt = gen_pass(-1, 32)))
+	if (!(name = strjoin(w->home, "/swap")) || !(new = strjoin(w->home, "/passwd")) || !(salt = gen_pass(ASCII, 32)))
 	{
 		free(w->home);
 		if (name)
@@ -196,8 +196,8 @@ void *save_chng(t_world *w)
 		w->stage = ERROR;
 		return (NULL);
 	}
-	for (int j = 0; j < 32; j++)
-		conc[j] = w->log->pass[j] ^ salt[j];
+	/*for (int j = 0; j < 32; j++)
+		conc[j] = w->log->pass[j] ^ salt[j];*/
 	write(fd, salt, 32);
 	free(salt);
 	sha256_string(w->log->pass, new_h);
