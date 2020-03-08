@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 18:22:17 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/07 05:25:11 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/08 09:41:34 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # include <ctype.h>
 # include <time.h>
 # include <string.h>
+# include <dirent.h>
+# include <errno.h>
 # include <openssl/ssl.h>
 
 void	set_std(int in, int out)
@@ -76,6 +78,18 @@ t_lst *create_lst(void)
 	return (NULL);
 }
 
+int recup_size(int fd)
+{
+	char c[13];
+	int i = -1;
+
+	while (read(fd, c + ++i, 1))
+		if (!isdigit(c[i]))
+			break ;
+	c[i] = '\0';
+	return (atoi(c));
+}
+
 void	destroy_lst(t_lst *lst)
 {
 	if (!lst)
@@ -125,6 +139,27 @@ char	*itoa(int n)
 			s[0] = '-';
 	}
 	return (s);
+}
+
+int msleep(long msec)
+{
+	struct timespec ts;
+	int res;
+
+	if (msec < 0)
+	{
+		errno = EINVAL;
+		return -1;
+	}
+
+	ts.tv_sec = msec / 1000;
+	ts.tv_nsec = (msec % 1000) * 1000000;
+
+	do {
+		res = nanosleep(&ts, &ts);
+	} while (res && errno == EINTR);
+
+	return res;
 }
 
 char	*strjoin(char const *s1, char const *s2)
@@ -227,11 +262,29 @@ char *new_pass(char *str)
 
 	while (str[++i])
 	{
-		if (!mode && isdigit(str[i]))
+		if (!mode && !isdigit(str[i]))
 			mode = 1;
-		if (mode != 2 && isalnum(str[i]))
+		if (mode != 2 && !isalnum(str[i]))
 			mode = 2;
 	}
 	free(str);
 	return (gen_pass(mode, i));
+}
+
+int check_new_user(char *usr_path, char *dir_path)
+{
+	DIR *dir;
+	struct dirent *node;
+	int len_dir = strlen(dir_path);
+
+	dir = opendir(dir_path);
+	while ((node = readdir(dir)))
+	{
+		if (!strcmp(node->d_name, usr_path + len_dir))
+		{
+			closedir(dir);
+			return (0);
+		}
+	}
+	return (1);
 }

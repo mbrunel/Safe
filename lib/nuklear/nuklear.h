@@ -3180,6 +3180,7 @@ struct nk_mouse {
 struct nk_key {
     int down;
     unsigned int clicked;
+	int pity;
 };
 struct nk_keyboard {
     struct nk_key keys[NK_KEY_MAX];
@@ -12595,6 +12596,10 @@ nk_input_key(struct nk_context *ctx, enum nk_keys key, int down)
     if (in->keyboard.keys[key].down != down)
         in->keyboard.keys[key].clicked++;
     in->keyboard.keys[key].down = down;
+	if (!in->keyboard.keys[key].pity)
+		in->keyboard.keys[key].pity = -1;
+	else
+		in->keyboard.keys[key].pity = 1;
 }
 
 NK_API void

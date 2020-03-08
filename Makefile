@@ -6,7 +6,7 @@
 #    By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/15 01:02:41 by mbrunel           #+#    #+#              #
-#    Updated: 2020/03/08 07:35:42 by mbrunel          ###   ########.fr        #
+#    Updated: 2020/03/08 14:22:32 by mbrunel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,10 +31,10 @@ D_LIB=lib
 D_NUKLEAR=$(D_LIB)/nuklear
 
 CC=gcc
-CFLAGS=-Wall -Wextra -Ofast
+CFLAGS=-Wall -Wextra #-Ofast
 DFLAGS=-MP -MMD -MF $(D_DEP)/$*.d -MT $@
 IFLAGS=-I$(D_INC) -I$(D_NUKLEAR) `sdl2-config --cflags` -I/$(HOME)/.brew/opt/openssl@1.1/include -I$(HOME)/.brew/include
-LDFLAGS= -Ofast -g -lm -DNKCD=NKC_SDL -framework OpenGL -framework Cocoa -framework IOKit `sdl2-config --libs` -L/$(HOME)/.brew/opt/openssl@1.1/lib -lcrypto
+LDFLAGS=-lm -DNKCD=NKC_SDL -framework OpenGL -framework Cocoa -framework IOKit `sdl2-config --libs` -L/$(HOME)/.brew/opt/openssl@1.1/lib -lcrypto
 
 C_RED=\033[31m
 C_GREEN=\033[32m
@@ -53,9 +53,10 @@ SRC=main.c\
 OBJ:=$(patsubst %.c, $(D_OBJ)/%.o, $(SRC))
 DEP:=$(patsubst %.c, $(D_DEP)/%.d, $(SRC))
 
-all : $(NAME)
+all :
+	@$(MAKE) $(NAME)
 
-$(NAME) : $(SDL) $(OPENSSL) $(GIT) $(OBJ)
+$(NAME) : $(SDL2) $(OPENSSL) $(GIT) $(OBJ)
 	@$(CC) $(OBJ) $(LDFLAGS) -o $(NAME)
 	@printf "$(BUILD_MSG) %s\n" $@
 

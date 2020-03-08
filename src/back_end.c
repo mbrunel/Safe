@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 18:17:17 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/07 08:20:46 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/08 08:43:12 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,6 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdlib.h>
-
-int recup_size(int fd)
-{
-	char c[13];
-	int i = -1;
-
-	while (read(fd, c + ++i, 1))
-		if (!isdigit(c[i]))
-			break ;
-	c[i] = '\0';
-	return (atoi(c));
-}
 
 int assign(t_world *w, char *buf)
 {
@@ -98,6 +86,9 @@ void *set_up_db(void *arg)
 	}
 	tmp = name;
 	name = strjoin(name, w->log->login);
+	if (!w->popup->new_user)
+		if ((w->popup->new_user = check_new_user(name, tmp)))
+			return (NULL);
 	w->home = strdup(name);
 	free(tmp);
 	if (call(w->env, "/bin/mkdir", "-p", "-m", "00700", name, NULL))
@@ -119,8 +110,10 @@ void *set_up_db(void *arg)
 	}
 	if (read(fd, salt, 32) != 32)
 	{
-		w->l = NULL;
-		w->popup->new_user = 1;
+		if (w->popup->new_user == 2)
+			w->stage = DASHBOARD;
+		else
+			w->stage = ERROR;
 		return (NULL);
 	}
 	salt[32] = 0;

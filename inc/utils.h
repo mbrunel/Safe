@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/01 02:08:00 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/07 05:22:24 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/08 09:41:53 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,8 @@ char					*itoa(int n);
 char					*strjoin(char const *s1, char const *s2);
 void					sha256_string(unsigned char *string, unsigned char outputBuffer[65]);
 char					*new_pass(char *str);
+int						recup_size(int fd);
+int						check_new_user(char *usr_path, char *dir_path);
+int						msleep(long msec);
 
 #endif

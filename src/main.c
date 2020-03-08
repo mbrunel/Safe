@@ -18,12 +18,36 @@
 
 #include "aes.h"
 
+#include <signal.h>
+
+int catch_exceptions = 0;
+
+void hook(int sig)
+{
+	if (sig == SIGQUIT || sig == SIGINT || sig == SIGTERM)
+		catch_exceptions = 2;
+	else if (sig == SIGSEGV || sig == SIGABRT || sig == SIGPIPE || sig == SIGFPE)
+		catch_exceptions = 1;
+}
+
+void exceptions_handler(void)
+{
+	signal(SIGINT, hook);
+	signal(SIGQUIT, hook);
+	signal(SIGTERM, hook);
+	signal(SIGSEGV, hook);
+	signal(SIGABRT, hook);
+	signal(SIGPIPE, hook);
+	signal(SIGFPE, hook);
+}
+
 void load_img(t_world *w)
 {
 	w->img->hide = nkc_load_image_file(w->nkc, "./icon/view_hide_icon.png");
 	w->img->show = nkc_load_image_file(w->nkc, "./icon/view_show_icon.png");
 	w->img->cpy = nkc_load_image_file(w->nkc, "./icon/cpy.png");
 	w->img->reroll = nkc_load_image_file(w->nkc, "./icon/reroll.png");
+	w->img->pinguin = nkc_load_image_file(w->nkc, "./icon/pinguin.png");
 }
 
 void mainLoop(void* loopArg)
@@ -36,13 +60,14 @@ void mainLoop(void* loopArg)
 	if((e.type == NKC_EWINDOW) && (e.window.param == NKC_EQUIT))
 		nkc_stop_main_loop(w->nkc);
 	SDL_GetWindowSize(w->nkc->window, &(w->nkc->win_width), &(w->nkc->win_height));
-	if (!nk_begin(ctx, "Show", nk_rect(0, 0, w->nkc->win_width, w->nkc->win_height),0))
+	if (!nk_begin(ctx, "Show", nk_rect(0, 0, w->nkc->win_width, w->nkc->win_height),0) || catch_exceptions == 1)
 		w->stage = ERROR;
 	set_style(w->nkc->ctx, THEME_RED);
-	if (w->nkc->keepRunning == ALWAYS_A_THIRD_OPTION)
+	if (w->nkc->keepRunning == ALWAYS_A_THIRD_OPTION || catch_exceptions == 2)
 	{
 		w->nkc->keepRunning = nk_false;
-		save_chng(w);
+		if (w->stage > LOGIN)
+			save_chng(w);
 	}
 	else
 		(*aff[w->stage])(w);
@@ -61,9 +86,10 @@ int main(int ac, char *av[], char *env[])
 
 	if (ac != 1 || av[1])
 		exit(0);
-	w = (t_world){&img, &log, &nkcx, LOGIN, NULL, &aes, env, NULL, NULL, NULL, NULL, &popup};
+	w = (t_world){&img, &log, &nkcx, LOGIN, NULL, &aes, env, NULL, NULL, NULL, NULL, &popup, (void*)av};
 	memset(w.log->login, 0, 256);
 	memset(w.log->check, 0, 256);
+	exceptions_handler();
 	if(nkc_init( w.nkc, "", 0.4,0.4, NKC_WIN_MAXIMIZED))
 	{
 		load_img(&w);
