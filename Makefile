@@ -6,13 +6,13 @@
 #    By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/15 01:02:41 by mbrunel           #+#    #+#              #
-#    Updated: 2020/03/08 06:03:18 by mbrunel          ###   ########.fr        #
+#    Updated: 2020/03/08 07:35:42 by mbrunel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME=ps-managerv2
 
-OPENSSL=$(HOME)/.brew/Cellar/openssl
+OPENSSL=$(HOME)/.brew/Cellar/openssl@1.1
 SDL2=$(HOME)/.brew/Cellar/sdl2
 
 GIT=
@@ -60,7 +60,7 @@ $(NAME) : $(SDL) $(OPENSSL) $(GIT) $(OBJ)
 	@printf "$(BUILD_MSG) %s\n" $@
 
 linux : $(GIT)
-	gcc $(CFLAGS) $(addprefix $(D_SRC)/, $(SRC)) -O2 -Wall -lm -DNKCD=NKC_SDL `pkg-config openssl --cflags --libs` `pkg-config sdl2 --cflags --libs` -L/usr/local/lib -Wl,-rpath,/usr/local/lib -Wl,--enable-new-dtags -I/usr/include/libdrm -lGL -o $(NAME) -Ilib/nuklear_linux -Iinc
+	gcc $(CFLAGS) $(addprefix $(D_SRC)/, $(SRC)) -O2 -Wall -lm -DNKCD=NKC_SDL `pkg-config openssl --cflags --libs` `pkg-config sdl2 --cflags --libs` -L/usr/local/lib -Wl,-rpath,/usr/local/lib -Wl,--enable-new-dtags -I/usr/include/libdrm -lGL -o $(NAME) -Ilib/nuklear -Iinc
 
 clean :
 	@rm -rf $(BUILD)

@@ -1,5 +1,5 @@
 /**
- * Nuklear+ (read as "Nuklear cross") is a front-end overlay for Nuklear GUI library. 
+ * Nuklear+ (read as "Nuklear cross") is a front-end overlay for Nuklear GUI library.
  * Write one simple code, compile it for any supported frontend.
  *
  * License: public domain
@@ -29,7 +29,7 @@ NK_API struct nk_image nkc_load_image_gl(unsigned char *data, int x, int y, int 
     #if (defined(NKC_USE_OPENGL) && (NKC_USE_OPENGL == NGL_ES2)) || defined(__EMSCRIPTEN__)
         /* WebGL via Emscripten */
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-        
+
         if (NKC_IS_POWER_OF_2(x) && NKC_IS_POWER_OF_2(y)){
             glGenerateMipmap(GL_TEXTURE_2D);
         } else {
@@ -39,34 +39,37 @@ NK_API struct nk_image nkc_load_image_gl(unsigned char *data, int x, int y, int 
         /* Desktop OpenGL */
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-        
+
         #if !defined(GL_GENERATE_MIPMAP)
             /* from GLEW.h, OpenGL 1.4 only! */
             #define GL_GENERATE_MIPMAP 0x8191
         #endif
-            
+
         #if defined(NKC_USE_OPENGL) && (NKC_USE_OPENGL > 2)
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
             glGenerateMipmap(GL_TEXTURE_2D);
         #else
-            glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE); 
+            glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         #endif
 
     #endif /* EMSCRIPTEN */
-    
+
     stbi_image_free(data);
+	(void)n;
     return nk_image_id((int)tex);
 }
 
 NK_API struct nk_image nkc_load_image_memory(struct nkc* nkcHandle, const void* membuf, int membufSize){
-    int x,y,n;    
+    int x,y,n;
+	(void)nkcHandle;
     unsigned char *data = stbi_load_from_memory((const stbi_uc*) membuf, membufSize, &x, &y, &n, 0);
     return nkc_load_image_gl(data, x, y, n);
 }
 
 NK_API struct nk_image nkc_load_image_file(struct nkc* nkcHandle, const char* filename){
     int x,y,n;
+	(void)nkcHandle;
     unsigned char *data = stbi_load(filename, &x, &y, &n, 0);
     return nkc_load_image_gl(data, x, y, n);
 }
@@ -81,4 +84,4 @@ NK_API void nkc_image_free(struct nk_image* img){
     #include "nkc_stbi_unused.h"
 }
 
-#endif 
+#endif

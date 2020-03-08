@@ -241,6 +241,7 @@ NK_API union nkc_event nkc_poll_events(struct nkc* nkcHandle){
 NK_API void nkc_render_bg(struct nkc* nkcHandle, struct nk_color bgColor){
     float bg[4];
     nk_color_fv(bg, bgColor);
+	(void)nkcHandle;
     /*SDL_GetWindowSize(nkcHandle->window, &(nkcHandle->win_width), &(nkcHandle->win_height) );
     glViewport(0, 0, nkcHandle->win_width, nkcHandle->win_height);*/
     glClear(GL_COLOR_BUFFER_BIT);
