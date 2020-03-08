@@ -20,14 +20,14 @@
     #endif
 
 
-    #include </Users/mbrunel/.brew/include/SDL2/SDL.h>
+    #include <SDL2/SDL.h>
 
     #if defined(NKC_OPENGL_VERSION) && (NKC_OPENGL_VERSION == NGL_ES2)
         /*#define GL_VERSION_1_5
-        #include </Users/mbrunel/.brew/include/SDL2//SDL_opengles2.h>*/
+        #include <SDL2/SDL_opengles2.h>*/
         #include <GLES2/gl2.h>
     #else
-        #include </Users/mbrunel/.brew/include/SDL2/SDL_opengl.h>
+        #include <SDL2/SDL_opengl.h>
     #endif
 
     struct nkc {

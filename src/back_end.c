@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 18:17:17 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/07 07:02:14 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/07 08:20:46 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,15 +120,14 @@ void *set_up_db(void *arg)
 	if (read(fd, salt, 32) != 32)
 	{
 		w->l = NULL;
-		w->stage++;
-		return (arg);
+		w->popup->new_user = 1;
+		return (NULL);
 	}
 	salt[32] = 0;
 	while (w->log->check[++i] && salt[i])
 		conc[i] = w->log->check[i] ^ salt[i];
 	conc[i] = '\0';
 	sha256_string((unsigned char*)conc, w->log->pass);
-	AES_init_ctx(w->ctx_aes, (uint8_t*)w->log->pass);
 	if (read(fd, old_h, 32) != 32)
 	{
 		w->stage = ERROR;
@@ -138,7 +137,14 @@ void *set_up_db(void *arg)
 	sha256_string(w->log->pass, new_h);
 	for (i = 0; i < 32; i++)
 		if (old_h[i] != new_h[i])
-			exit(0);
+		{
+			w->popup->wrong_pass = 1;
+			bzero(w->log->check, sizeof(char) * 32);
+			bzero(w->log->pass, sizeof(char) * 32);
+			w->log->lens[1] = 0;
+			return (NULL);
+		}
+	AES_init_ctx(w->ctx_aes, (uint8_t*)w->log->pass);
 	if (read(fd, iv, 16) != 16)
 	{
 		w->stage = ERROR;

@@ -6,13 +6,14 @@
 #    By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/15 01:02:41 by mbrunel           #+#    #+#              #
-#    Updated: 2020/03/07 07:07:23 by mbrunel          ###   ########.fr        #
+#    Updated: 2020/03/08 06:03:18 by mbrunel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME=ps-managerv2
 
-OPENSSL=/Users/$(USER)/.brew/opt/openssl@1.1
+OPENSSL=$(HOME)/.brew/Cellar/openssl
+SDL2=$(HOME)/.brew/Cellar/sdl2
 
 GIT=
 
@@ -30,16 +31,17 @@ D_LIB=lib
 D_NUKLEAR=$(D_LIB)/nuklear
 
 CC=gcc
-CFLAGS=-Wall -Wextra #-Ofast #-Werror
+CFLAGS=-Wall -Wextra -Ofast
 DFLAGS=-MP -MMD -MF $(D_DEP)/$*.d -MT $@
-IFLAGS=-I$(D_INC) -I$(D_NUKLEAR) `sdl2-config --cflags` -I/Users/$(USER)/.brew/opt/openssl@1.1/include
-LDFLAGS= -Ofast -g -lm -DNKCD=NKC_SDL -framework OpenGL -framework Cocoa -framework IOKit `sdl2-config --libs` -L/Users/$(USER)/.brew/opt/openssl@1.1/lib -lcrypto
+IFLAGS=-I$(D_INC) -I$(D_NUKLEAR) `sdl2-config --cflags` -I/$(HOME)/.brew/opt/openssl@1.1/include -I$(HOME)/.brew/include
+LDFLAGS= -Ofast -g -lm -DNKCD=NKC_SDL -framework OpenGL -framework Cocoa -framework IOKit `sdl2-config --libs` -L/$(HOME)/.brew/opt/openssl@1.1/lib -lcrypto
 
 C_RED=\033[31m
 C_GREEN=\033[32m
 C_CYAN=\033[36m
 C_NONE=\033[0m
-SUCCESS_MSG=SUCCESS
+BUILD_MSG=$(C_GREEN)\xE2\x9C\x94$(C_NONE)
+REMOVE_MSG=$(C_RED)\xE2\x9C\x95$(C_NONE)
 
 SRC=main.c\
 	styles.c\
@@ -51,22 +53,22 @@ SRC=main.c\
 OBJ:=$(patsubst %.c, $(D_OBJ)/%.o, $(SRC))
 DEP:=$(patsubst %.c, $(D_DEP)/%.d, $(SRC))
 
-$(NAME) : $(SSL) $(GIT) $(OBJ)
-	@$(CC) $(OBJ) $(LDFLAGS) -o $(NAME)
-	@printf "\n%s\t\t$(C_GREEN)[$(SUCCESS_MSG)]$(C_NONE)\n\n" $@
-
 all : $(NAME)
+
+$(NAME) : $(SDL) $(OPENSSL) $(GIT) $(OBJ)
+	@$(CC) $(OBJ) $(LDFLAGS) -o $(NAME)
+	@printf "$(BUILD_MSG) %s\n" $@
 
 linux : $(GIT)
 	gcc $(CFLAGS) $(addprefix $(D_SRC)/, $(SRC)) -O2 -Wall -lm -DNKCD=NKC_SDL `pkg-config openssl --cflags --libs` `pkg-config sdl2 --cflags --libs` -L/usr/local/lib -Wl,-rpath,/usr/local/lib -Wl,--enable-new-dtags -I/usr/include/libdrm -lGL -o $(NAME) -Ilib/nuklear_linux -Iinc
 
 clean :
 	@rm -rf $(BUILD)
-	@printf "\nrm %s\t\t$(C_GREEN)[$(SUCCESS_MSG)]$(C_NONE)\n" $(BUILD)
+	@printf "$(REMOVE_MSG) rm %s\n" $(BUILD)
 
 fclean : clean
 	@rm -rf $(NAME)
-	@printf "\nrm %s\t$(C_GREEN)[$(SUCCESS_MSG)]$(C_NONE)\n"
+	@printf "$(REMOVE_MSG) rm %s\n" $(NAME)
 
 re : fclean all
 
@@ -74,17 +76,21 @@ $(GIT) :
 	@git submodule init
 	@git submodule update --remote
 
-$(SSL) :
+$(OPENSSL) :
 	@printf "\n$(C_CYAN)Install openssl...$(C_NONE)\n"
 	brew install openssl
 
+$(SDL2) :
+	@printf "\n$(C_CYAN)Install sdl2...$(C_NONE)\n"
+	brew install sdl2
+
 $(BUILD) :
 	@mkdir -p $@ $(DIRS)
-	@printf "\n%s\t\t\t$(C_GREEN)[$(SUCCESS_MSG)]$(C_NONE)\n" $@
+	@printf "$(BUILD_MSG) %s\n" $@
 
 $(D_OBJ)/%.o : $(D_SRC)/%.c | $(BUILD)
 	@$(CC) $(CFLAGS) $(IFLAGS) $(DFLAGS) -c $< -o $@
-	@printf "\n%s\t\t$(C_GREEN)[$(SUCCESS_MSG)]$(C_NONE)\n" $<
+	@printf "$(BUILD_MSG) %s\n" $<
 
 -include $(DEP)
 

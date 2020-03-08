@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 06:37:09 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/07 05:22:32 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/07 08:46:29 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -388,7 +388,7 @@ void	aff_dashboard(t_world *w)
 	mov_b(w, board, 0, nb_widg(node));
 	nk_layout_row_dynamic(w->nkc->ctx, w->nkc->win_height / 18, 1);
 	nk_layout_row_begin(w->nkc->ctx, NK_DYNAMIC, w->nkc->win_height / 8, 8);
-    nk_layout_row_push(w->nkc->ctx, 0.04f);
+	nk_layout_row_push(w->nkc->ctx, 0.04f);
 	nk_spacing(w->nkc->ctx, 1);
 	nk_layout_row_push(w->nkc->ctx, 0.20f);
 	set_style(w->nkc->ctx, THEME_GREEN);
@@ -459,6 +459,7 @@ void	aff_login(t_world *w)
 	int			i = 0;
 	static int	boo = 0;
 	static int	paf[2] = {0};
+	struct nk_rect s = {w->nkc->win_width / 3, w->nkc->win_height / 70, w->nkc->win_width / 3, w->nkc->win_height / 6};
 
 	for (i = 0; i < w->log->lens[1]; ++i) w->log->masqued[i] = '*';
 	if (w->nkc->ctx->input.keyboard.keys[NK_KEY_TAB].clicked)
@@ -471,6 +472,31 @@ void	aff_login(t_world *w)
 	}
 	if (w->nkc->ctx->input.mouse.buttons[NK_BUTTON_LEFT].down)
 		boo = -1;
+	if (w->popup->new_user)
+	{
+		if (nk_popup_begin(w->nkc->ctx, NK_POPUP_DYNAMIC, "", NK_WINDOW_BORDER, s))
+		{
+			nk_layout_row_dynamic(w->nkc->ctx, 20, 1);
+			nk_label(w->nkc->ctx, "Do you wish to create a new User?", NK_TEXT_CENTERED);
+			nk_layout_row_dynamic(w->nkc->ctx, w->nkc->win_height / 30, 3);
+			set_style(w->nkc->ctx, THEME_GREEN);
+			if (nk_button_label(w->nkc->ctx, "YES"))
+				w->stage = DASHBOARD;
+			set_style(w->nkc->ctx, THEME_RED);
+			nk_spacing(w->nkc->ctx, 1);
+			if (nk_button_label(w->nkc->ctx, "NO"))
+			{
+				bzero(w->log->login, w->log->lens[0]);
+				bzero(w->log->check, w->log->lens[1]);
+				w->log->lens[0] = 0;
+				w->log->lens[1] = 0;
+				boo = 0;
+				w->popup->new_user = 0;
+				w->popup->wrong_pass = 0;
+			}
+			nk_popup_end(w->nkc->ctx);
+		} else w->popup->new_user = 0;
+	}
 	nk_layout_row_dynamic(w->nkc->ctx, w->nkc->win_height / 4, 1);
 	nk_layout_row_begin(w->nkc->ctx, NK_DYNAMIC, w->nkc->win_height / 12, 3);
 	nk_layout_row_push(w->nkc->ctx, 0.25f);
@@ -486,13 +512,16 @@ void	aff_login(t_world *w)
 	nk_layout_row_dynamic(w->nkc->ctx, w->nkc->win_height / 10, 1);
 	nk_layout_row_begin(w->nkc->ctx, NK_DYNAMIC, w->nkc->win_height / 12, 3);
 	nk_layout_row_push(w->nkc->ctx, 0.25f);
+	if (w->popup->wrong_pass)
+		w->nkc->ctx->style.text.color = nk_rgba(190, 50, 70, 255);
 	nk_label(w->nkc->ctx, "Password : ", NK_TEXT_RIGHT);
+	w->nkc->ctx->style.text.color = nk_rgba(255, 255, 255, 255);
 	nk_layout_row_push(w->nkc->ctx, 0.5f);
 	if (boo == 1)
 		nk_edit_focus(w->nkc->ctx, NK_EDIT_SIMPLE|NK_EDIT_GOTO_END_ON_ACTIVATE);
 	else if (!boo)
 		nk_edit_unfocus(w->nkc->ctx);
-	nk_edit_string(w->nkc->ctx, NK_EDIT_SIMPLE|NK_EDIT_GOTO_END_ON_ACTIVATE, w->log->masqued, w->log->lens + 1, 128, nk_filter_default);
+	nk_edit_string(w->nkc->ctx, NK_EDIT_SIMPLE|NK_EDIT_GOTO_END_ON_ACTIVATE, w->log->masqued, w->log->lens + 1, 32, nk_filter_default);
 	if (old_len < w->log->lens[1])
 		memcpy(w->log->check + old_len, w->log->masqued + old_len, (nk_size)(w->log->lens[1] - old_len));
 	w->log->check[w->log->lens[1]] = '\0';

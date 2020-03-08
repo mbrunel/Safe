@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 01:28:25 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/07 06:34:50 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/07 08:15:26 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,12 @@ typedef struct			s_img
 	struct nk_image		reroll;
 }						t_img;
 
+typedef struct			s_popup
+{
+	int					wrong_pass;
+	int					new_user;
+}						t_popup;
+
 typedef struct			s_world
 {
 	t_img				*img;
@@ -59,6 +65,7 @@ typedef struct			s_world
 	t_lst				*backup;
 	t_lst				*prev;
 	char				*home;
+	t_popup				*popup;
 }						t_world;
 
 void					set_style(struct nk_context *ctx, enum theme theme);

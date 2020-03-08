@@ -57,10 +57,11 @@ int main(int ac, char *av[], char *env[])
 	t_img			 img;
 	t_world			w;
 	t_log			log;
+	t_popup			popup = {0, 0};
 
 	if (ac != 1 || av[1])
 		exit(0);
-	w = (t_world){&img, &log, &nkcx, LOGIN, NULL, &aes, env, NULL, NULL, NULL, NULL};
+	w = (t_world){&img, &log, &nkcx, LOGIN, NULL, &aes, env, NULL, NULL, NULL, NULL, &popup};
 	memset(w.log->login, 0, 256);
 	memset(w.log->check, 0, 256);
 	if(nkc_init( w.nkc, "", 0.4,0.4, NKC_WIN_MAXIMIZED))
