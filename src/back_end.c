@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 18:17:17 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/08 08:43:12 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/12 13:06:50 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ void *set_up_db(void *arg)
 	uint8_t iv[16];
 	unsigned char salt[33];
 	unsigned char conc[33];
+	unsigned char salty[33];
 	int i = -1;
 
 	if (!(name = strjoin(getenv("HOME"), "/.safe/")))
@@ -117,6 +118,9 @@ void *set_up_db(void *arg)
 		return (NULL);
 	}
 	salt[32] = 0;
+	sha256_string((unsigned char*)w->log->check, salty);
+	AES_init_ctx(w->ctx_aes, salty);
+	AES_ECB_decrypt(w->ctx_aes, salt);
 	while (w->log->check[++i] && salt[i])
 		conc[i] = w->log->check[i] ^ salt[i];
 	conc[i] = '\0';
@@ -181,6 +185,7 @@ void *save_chng(t_world *w)
 	unsigned char new_h[32];
 	unsigned char new_pass[33];
 	unsigned char conc[33];
+	unsigned char salty[33];
 	int j = -1;
 
 	if (!w->home)
@@ -201,10 +206,13 @@ void *save_chng(t_world *w)
 		w->stage = ERROR;
 		return (NULL);
 	}
-	write(fd, salt, 32);
 	while (w->log->check[++j])
 		conc[j] = w->log->check[j] ^ salt[j];
 	conc[j] = '\0';
+	sha256_string((unsigned char*)w->log->check, salty);
+	AES_init_ctx(w->ctx_aes, (uint8_t*)salty);
+	AES_ECB_encrypt(w->ctx_aes, (uint8_t*)salt);
+	write(fd, salt, 32);
 	sha256_string((unsigned char*)conc, new_pass);
 	new_pass[32] = '\0';
 	free(salt);

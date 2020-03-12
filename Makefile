@@ -6,7 +6,7 @@
 #    By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/15 01:02:41 by mbrunel           #+#    #+#              #
-#    Updated: 2020/03/08 14:22:32 by mbrunel          ###   ########.fr        #
+#    Updated: 2020/03/12 16:14:27 by mbrunel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,7 @@ D_LIB=lib
 D_NUKLEAR=$(D_LIB)/nuklear
 
 CC=gcc
-CFLAGS=-Wall -Wextra #-Ofast
+CFLAGS=-Wall -Wextra -g3 -Ofast
 DFLAGS=-MP -MMD -MF $(D_DEP)/$*.d -MT $@
 IFLAGS=-I$(D_INC) -I$(D_NUKLEAR) `sdl2-config --cflags` -I/$(HOME)/.brew/opt/openssl@1.1/include -I$(HOME)/.brew/include
 LDFLAGS=-lm -DNKCD=NKC_SDL -framework OpenGL -framework Cocoa -framework IOKit `sdl2-config --libs` -L/$(HOME)/.brew/opt/openssl@1.1/lib -lcrypto

@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 01:28:25 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/08 15:20:44 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/12 16:11:16 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,17 @@
 # define PREFIX 5
 # define LEN_MAX 99999
 
+# ifndef HOME
+#  define HOME "/"
+# endif
+
 enum stage 				{ERROR, LOGIN, DASHBOARD, ONE, NEW, NB};
 
 typedef struct			s_log
 {
 	char				login[256];
 	unsigned char		pass[33];
+	unsigned char		tmp[33];
 	char				check[256];
 	char				second[256];
 	char				masqued[256];
@@ -46,6 +51,7 @@ typedef struct			s_img
 	struct nk_image		cpy;
 	struct nk_image		reroll;
 	struct nk_image		pinguin;
+	struct nk_image		logo;
 }						t_img;
 
 typedef struct			s_popup

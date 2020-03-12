@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 06:37:09 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/08 16:58:22 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/12 12:19:31 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,7 +246,11 @@ void	aff_one(t_world *w)
 			see_pass = 0;
 	nk_layout_row_push(w->nkc->ctx, 0.042f);
 	if (nk_button_image(w->nkc->ctx, w->img->reroll))
-		w->backup->pass = new_pass(w->backup->pass);
+		if (!(w->backup->pass = new_pass(w->backup->pass)))
+		{
+			w->stage = ERROR;
+			return ;
+		}
 	nk_layout_row_push(w->nkc->ctx, 0.042f);
 	if (nk_button_image(w->nkc->ctx, w->img->cpy))
 		copy_osx(w->backup->pass, w->env);
@@ -537,7 +541,13 @@ void	aff_login(t_world *w)
 			nk_popup_end(w->nkc->ctx);
 		} else w->popup->new_user = 0;
 	}
-	nk_layout_row_dynamic(w->nkc->ctx, w->nkc->win_height / 4, 1);
+	nk_layout_row_dynamic(w->nkc->ctx, w->nkc->win_height / 35, 1);
+	nk_layout_row_dynamic(w->nkc->ctx, w->nkc->win_height / 4, 5);
+	nk_spacing(w->nkc->ctx, 2);
+	set_style(w->nkc->ctx, THEME_MASQUED);
+	nk_button_image(w->nkc->ctx, w->img->logo);
+	set_style(w->nkc->ctx, THEME_RED);
+	nk_layout_row_dynamic(w->nkc->ctx, w->nkc->win_height / 35, 1);
 	nk_layout_row_begin(w->nkc->ctx, NK_DYNAMIC, w->nkc->win_height / 12, 3);
 	nk_layout_row_push(w->nkc->ctx, 0.25f);
 	nk_label(w->nkc->ctx, "login : ", NK_TEXT_RIGHT);

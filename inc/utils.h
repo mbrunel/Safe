@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/01 02:08:00 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/08 09:41:53 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/12 16:20:14 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 enum pass 				{NUM, ALNUM, GRAPH, ASCII};
 
-enum theme				{THEME_BLACK, THEME_WHITE, THEME_RED, THEME_BLUE, THEME_DARK, THEME_GREEN, THEME_YELLOW};
+enum theme				{THEME_BLACK, THEME_WHITE, THEME_RED, THEME_BLUE, THEME_DARK, THEME_GREEN, THEME_YELLOW, THEME_MASQUED};
 
 typedef struct			s_lst
 {
@@ -38,10 +38,11 @@ char					*gen_pass(int mode, int len);
 void					copy_osx(char *buf, char *env[]);
 char					*itoa(int n);
 char					*strjoin(char const *s1, char const *s2);
-void					sha256_string(unsigned char *string, unsigned char outputBuffer[65]);
+void					sha256_string(unsigned char *string, unsigned char outputBuffer[32]);
 char					*new_pass(char *str);
 int						recup_size(int fd);
 int						check_new_user(char *usr_path, char *dir_path);
 int						msleep(long msec);
+char					*search_env(char *env_tmp, char *env[]);
 
 #endif

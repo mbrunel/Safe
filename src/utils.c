@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 18:22:17 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/08 09:41:34 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/12 16:21:27 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,12 +95,16 @@ void	destroy_lst(t_lst *lst)
 	if (!lst)
 		return ;
 	if (lst->acc)
+		bzero(lst->acc, strlen(lst->acc));
 		free(lst->acc);
 	if (lst->name)
+		bzero(lst->name, strlen(lst->name));
 		free(lst->name);
 	if (lst->email)
+		bzero(lst->name, strlen(lst->name));
 		free(lst->email);
 	if (lst->pass)
+		bzero(lst->pass, strlen(lst->pass));
 		free(lst->pass);
 	free(lst);
 }
@@ -287,4 +291,15 @@ int check_new_user(char *usr_path, char *dir_path)
 		}
 	}
 	return (1);
+}
+
+char	*search_env(char *env_tmp, char *env[])
+{
+	int	i;
+
+	i = 0;
+	while (env[++i])
+		if (!strncmp(env[i], env_tmp, strlen(env_tmp)))
+			return (env[i] + strlen(env_tmp) + 1);
+	return (NULL);
 }
