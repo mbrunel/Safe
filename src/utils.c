@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 18:22:17 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/13 05:42:59 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/13 12:22:49 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,21 +242,6 @@ char *gen_pass(int mode, int len)
 	}
 	new[i] = '\0';
 	return (new);
-}
-
-void copy_osx(char *buf, char *env[])
-{
-	int in;
-	int out;
-	int pip[2];
-
-	save_std(&in, &out);
-	pipe(pip);
-	set_std(pip[0], pip[1]);
-	write(1, buf, strlen(buf));
-	close(1);
-	call(env, "/usr/bin/pbcopy", NULL);
-	set_std(in, out);
 }
 
 void sha256_string(unsigned char *string, unsigned char hash[32])

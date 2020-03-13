@@ -6,11 +6,11 @@
 #    By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/15 01:02:41 by mbrunel           #+#    #+#              #
-#    Updated: 2020/03/13 05:16:12 by mbrunel          ###   ########.fr        #
+#    Updated: 2020/03/13 13:22:14 by mbrunel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME=ps-managerv2
+NAME=Safe
 
 OPENSSL=$(HOME)/.brew/Cellar/openssl@1.1
 SDL2=$(HOME)/.brew/Cellar/sdl2

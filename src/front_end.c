@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 06:37:09 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/12 12:19:31 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/13 12:22:52 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -253,7 +253,7 @@ void	aff_one(t_world *w)
 		}
 	nk_layout_row_push(w->nkc->ctx, 0.042f);
 	if (nk_button_image(w->nkc->ctx, w->img->cpy))
-		copy_osx(w->backup->pass, w->env);
+		SDL_SetClipboardText(w->backup->pass);
 	nk_layout_row_end(w->nkc->ctx);
 	nk_layout_row_dynamic(w->nkc->ctx, w->nkc->win_height / 7, 1);
 	nk_layout_row_begin(w->nkc->ctx, NK_DYNAMIC, w->nkc->win_height / 9, 6);

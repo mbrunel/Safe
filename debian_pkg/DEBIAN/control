@@ -1,0 +1,10 @@
+Package: Safe 
+Version: 1.1-1
+Section: base
+Priority: optional
+Architecture: all
+Depends:
+Maintainer: mbrunel mbrunel@student.42.fr
+Description: Applicatioin for safely manage passwords 
+
+

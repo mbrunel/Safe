@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/01 02:08:00 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/12 16:20:14 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/13 12:22:43 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ t_lst					*create_lst(void);
 void					destroy_lst(t_lst *lst);
 uint8_t 				*gen_iv(uint8_t *rt);
 char					*gen_pass(int mode, int len);
-void					copy_osx(char *buf, char *env[]);
 char					*itoa(int n);
 char					*strjoin(char const *s1, char const *s2);
 void					sha256_string(unsigned char *string, unsigned char outputBuffer[32]);
