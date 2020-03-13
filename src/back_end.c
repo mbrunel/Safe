@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 18:17:17 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/12 13:06:50 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/13 05:46:08 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,7 @@ void *set_up_db(void *arg)
 	AES_ECB_decrypt(w->ctx_aes, (uint8_t*)iv);
 	AES_ctx_set_iv(w->ctx_aes, iv);
 	size = recup_size(fd);
-	if (!(buf = calloc(size, sizeof(char))))
+	if (!(buf = calloc(size + 1, sizeof(char))))
 	{
 		w->stage = ERROR;
 		return (NULL);

@@ -32,13 +32,13 @@ void hook(int sig)
 
 void exceptions_handler(void)
 {
-	signal(SIGINT, hook);
+	/*signal(SIGINT, hook);
 	signal(SIGQUIT, hook);
 	signal(SIGTERM, hook);
 	signal(SIGSEGV, hook);
 	signal(SIGABRT, hook);
 	signal(SIGPIPE, hook);
-	signal(SIGFPE, hook);
+	signal(SIGFPE, hook);*/
 }
 
 void load_img(t_world *w)
@@ -46,24 +46,36 @@ void load_img(t_world *w)
 	char *imgs;
 	char home[1024];
 	strcpy(home, search_env("HOME", w->env));
-	imgs = strjoin(home, "/Applications/Safe.app/Contents/icon/logo.psd");
-	w->img->logo = nkc_load_image_file(w->nkc, imgs);
-	free(imgs);
-	imgs = strjoin(home, "/Applications/Safe.app/Contents/icon/view_hide_icon.png");
-	w->img->hide = nkc_load_image_file(w->nkc, imgs);
-	free(imgs);
-	imgs = strjoin(home, "/Applications/Safe.app/Contents/icon/view_show_icon.png");
-	w->img->show = nkc_load_image_file(w->nkc, imgs);
-	free(imgs);
-	imgs = strjoin(home, "/Applications/Safe.app/Contents/icon/cpy.png");
-	w->img->cpy = nkc_load_image_file(w->nkc, imgs);
-	free(imgs);
-	imgs = strjoin(home, "/Applications/Safe.app/Contents/icon/reroll.png");
-	w->img->reroll = nkc_load_image_file(w->nkc, imgs);
-	free(imgs);
-	imgs = strjoin(home, "/Applications/Safe.app/Contents/icon/pinguin.png");
-	w->img->pinguin = nkc_load_image_file(w->nkc, imgs);
-	free(imgs);
+	if ((imgs = strjoin(home, "/Applications/Safe.app/Contents/icon/logo.psd")))
+	{
+		w->img->logo = nkc_load_image_file(w->nkc, imgs);
+		free(imgs);
+	}
+	if ((imgs = strjoin(home, "/Applications/Safe.app/Contents/icon/view_hide_icon.png")))
+	{
+		w->img->hide = nkc_load_image_file(w->nkc, imgs);
+		free(imgs);
+	}
+	if ((imgs = strjoin(home, "/Applications/Safe.app/Contents/icon/view_show_icon.png")))
+	{
+		w->img->show = nkc_load_image_file(w->nkc, imgs);
+		free(imgs);
+	}
+	if ((imgs = strjoin(home, "/Applications/Safe.app/Contents/icon/cpy.png")))
+	{
+		w->img->cpy = nkc_load_image_file(w->nkc, imgs);
+		free(imgs);
+	}
+	if ((imgs = strjoin(home, "/Applications/Safe.app/Contents/icon/reroll.png")))
+	{
+		w->img->reroll = nkc_load_image_file(w->nkc, imgs);
+		free(imgs);
+	}
+	if ((imgs = strjoin(home, "/Applications/Safe.app/Contents/icon/pinguin.png")))
+	{
+		w->img->pinguin = nkc_load_image_file(w->nkc, imgs);
+		free(imgs);
+	}
 }
 
 void mainLoop(void* loopArg)
@@ -105,6 +117,7 @@ int main(int ac, char *av[], char *env[])
 	w = (t_world){&img, &log, &nkcx, LOGIN, NULL, &aes, env, NULL, NULL, NULL, NULL, &popup, (void*)av};
 	memset(w.log->login, 0, 256);
 	memset(w.log->check, 0, 256);
+	w.log->lens[0] = 0;w.log->lens[1] = 0;w.log->lens[2] = 0;
 	exceptions_handler();
 	if(nkc_init( w.nkc, "", 0.4,0.4, NKC_WIN_MAXIMIZED))
 	{

@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 18:22:17 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/12 16:21:27 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/13 05:42:59 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,17 +95,25 @@ void	destroy_lst(t_lst *lst)
 	if (!lst)
 		return ;
 	if (lst->acc)
+	{
 		bzero(lst->acc, strlen(lst->acc));
 		free(lst->acc);
+	}
 	if (lst->name)
+	{
 		bzero(lst->name, strlen(lst->name));
 		free(lst->name);
+	}
 	if (lst->email)
-		bzero(lst->name, strlen(lst->name));
+	{
+		bzero(lst->email, strlen(lst->email));
 		free(lst->email);
+	}
 	if (lst->pass)
+	{
 		bzero(lst->pass, strlen(lst->pass));
 		free(lst->pass);
+	}
 	free(lst);
 }
 

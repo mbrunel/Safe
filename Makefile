@@ -6,7 +6,7 @@
 #    By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/15 01:02:41 by mbrunel           #+#    #+#              #
-#    Updated: 2020/03/12 16:14:27 by mbrunel          ###   ########.fr        #
+#    Updated: 2020/03/13 05:16:12 by mbrunel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,7 +61,7 @@ $(NAME) : $(SDL2) $(OPENSSL) $(GIT) $(OBJ)
 	@printf "$(BUILD_MSG) %s\n" $@
 
 linux : $(GIT)
-	gcc $(CFLAGS) $(addprefix $(D_SRC)/, $(SRC)) -O2 -Wall -lm -DNKCD=NKC_SDL `pkg-config openssl --cflags --libs` `pkg-config sdl2 --cflags --libs` -L/usr/local/lib -Wl,-rpath,/usr/local/lib -Wl,--enable-new-dtags -I/usr/include/libdrm -lGL -o $(NAME) -Ilib/nuklear -Iinc
+	gcc $(CFLAGS) $(addprefix $(D_SRC)/, $(SRC)) -O2 -g3 -Wall -lm -DNKCD=NKC_SDL `pkg-config openssl --cflags --libs` `pkg-config sdl2 --cflags --libs` -L/usr/local/lib -Wl,-rpath,/usr/local/lib -Wl,--enable-new-dtags -I/usr/include/libdrm -lGL -o $(NAME) -Ilib/nuklear -Iinc
 
 clean :
 	@rm -rf $(BUILD)
