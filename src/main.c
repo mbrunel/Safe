@@ -45,48 +45,42 @@ void load_img(t_world *w)
 {
 	if (OSX == 1)
 	{
-	char *imgs;
-	char home[1024];
-	strcpy(home, search_env("HOME", w->env));
-	if ((imgs = strjoin(home, "/Applications/Safe.app/Contents/icon/logo.psd")))
-	{
-		w->img->logo = nkc_load_image_file(w->nkc, imgs);
-		free(imgs);
-	}
-	if ((imgs = strjoin(home, "/Applications/Safe.app/Contents/icon/view_hide_icon.png")))
-	{
-		w->img->hide = nkc_load_image_file(w->nkc, imgs);
-		free(imgs);
-	}
-	if ((imgs = strjoin(home, "/Applications/Safe.app/Contents/icon/view_show_icon.png")))
-	{
-		w->img->show = nkc_load_image_file(w->nkc, imgs);
-		free(imgs);
-	}
-	if ((imgs = strjoin(home, "/Applications/Safe.app/Contents/icon/cpy.png")))
-	{
-		w->img->cpy = nkc_load_image_file(w->nkc, imgs);
-		free(imgs);
-	}
-	if ((imgs = strjoin(home, "/Applications/Safe.app/Contents/icon/reroll.png")))
-	{
-		w->img->reroll = nkc_load_image_file(w->nkc, imgs);
-		free(imgs);
-	}
-	if ((imgs = strjoin(home, "/Applications/Safe.app/Contents/icon/pinguin.png")))
-	{
-		w->img->pinguin = nkc_load_image_file(w->nkc, imgs);
-		free(imgs);
-	}
+		char *imgs;
+		char home[1024];
+		strcpy(home, search_env("HOME", w->env));
+		if ((imgs = strjoin(home, "/Applications/Safe.app/Contents/icon/logo.png")))
+		{
+			w->img->logo = nkc_load_image_file(w->nkc, imgs);
+			free(imgs);
+		}
+		if ((imgs = strjoin(home, "/Applications/Safe.app/Contents/icon/view_hide_icon.png")))
+		{
+			w->img->hide = nkc_load_image_file(w->nkc, imgs);
+			free(imgs);
+		}
+		if ((imgs = strjoin(home, "/Applications/Safe.app/Contents/icon/view_show_icon.png")))
+		{
+			w->img->show = nkc_load_image_file(w->nkc, imgs);
+			free(imgs);
+		}
+		if ((imgs = strjoin(home, "/Applications/Safe.app/Contents/icon/cpy.png")))
+		{
+			w->img->cpy = nkc_load_image_file(w->nkc, imgs);
+			free(imgs);
+		}
+		if ((imgs = strjoin(home, "/Applications/Safe.app/Contents/icon/reroll.png")))
+		{
+			w->img->reroll = nkc_load_image_file(w->nkc, imgs);
+			free(imgs);
+		}
 	}
 	if (LINUX == 1)
 	{
-	w->img->logo = nkc_load_image_file(w->nkc, "/usr/share/icons/Safe/logo.psd");
-	w->img->hide = nkc_load_image_file(w->nkc, "/usr/share/icons/Safe/view_hide_icon.png");
-	w->img->show = nkc_load_image_file(w->nkc, "/usr/share/icons/Safe/view_show_icon.png");
-	w->img->cpy = nkc_load_image_file(w->nkc, "/usr/share/icons/Safe/cpy.png");
-	w->img->reroll = nkc_load_image_file(w->nkc, "/usr/share/icons/Safe/reroll.png");
-	w->img->pinguin = nkc_load_image_file(w->nkc, "/usr/sare/icons/Safe/pinguin.png");
+		w->img->logo = nkc_load_image_file(w->nkc, "/usr/share/Safe/logo.png");
+		w->img->hide = nkc_load_image_file(w->nkc, "/usr/share/Safe/view_hide_icon.png");
+		w->img->show = nkc_load_image_file(w->nkc, "/usr/share/Safe/view_show_icon.png");
+		w->img->cpy = nkc_load_image_file(w->nkc, "/usr/share/Safe/cpy.png");
+		w->img->reroll = nkc_load_image_file(w->nkc, "/usr/share/Safe/reroll.png");
 	}
 }
 void mainLoop(void* loopArg)

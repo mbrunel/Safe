@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 06:37:09 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/13 12:22:52 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/14 07:42:45 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -638,6 +638,7 @@ void	aff_error(t_world *w)
 	nk_label(w->nkc->ctx, "oooops... an error occured. Don't panic! click to restart", NK_TEXT_CENTERED);
 	nk_layout_row_dynamic(w->nkc->ctx, w->nkc->win_height / 2, 3);
 	nk_spacing(w->nkc->ctx, 1);
-	if (nk_button_image(w->nkc->ctx, w->img->pinguin))
+	set_style(w->nkc->ctx, THEME_MASQUED);
+	if (nk_button_image(w->nkc->ctx, w->img->logo))
 		execve(((char**)w->av)[0], w->av, w->env);
 }

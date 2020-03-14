@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Safe
+Comment=simple non-syncronizable password manager
+GenericName=password manager
+Exec=/usr/bin/Safe
+Icon=/usr/share/Safe/logo.png
+Type=Application
+StartupNotify=false
+StartupWMClass=C
+Categories=Utility;Security;
+Actions=new-window;
+Keywords=Safe;
