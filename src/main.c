@@ -43,6 +43,8 @@ void exceptions_handler(void)
 
 void load_img(t_world *w)
 {
+	if (OSX == 1)
+	{
 	char *imgs;
 	char home[1024];
 	strcpy(home, search_env("HOME", w->env));
@@ -76,8 +78,17 @@ void load_img(t_world *w)
 		w->img->pinguin = nkc_load_image_file(w->nkc, imgs);
 		free(imgs);
 	}
+	}
+	if (LINUX == 1)
+	{
+	w->img->logo = nkc_load_image_file(w->nkc, "/usr/share/icons/Safe/logo.psd");
+	w->img->hide = nkc_load_image_file(w->nkc, "/usr/share/icons/Safe/view_hide_icon.png");
+	w->img->show = nkc_load_image_file(w->nkc, "/usr/share/icons/Safe/view_show_icon.png");
+	w->img->cpy = nkc_load_image_file(w->nkc, "/usr/share/icons/Safe/cpy.png");
+	w->img->reroll = nkc_load_image_file(w->nkc, "/usr/share/icons/Safe/reroll.png");
+	w->img->pinguin = nkc_load_image_file(w->nkc, "/usr/sare/icons/Safe/pinguin.png");
+	}
 }
-
 void mainLoop(void* loopArg)
 {
 	t_world				*w = (t_world*)loopArg;

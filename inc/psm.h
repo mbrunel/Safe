@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 01:28:25 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/12 16:11:16 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/03/14 05:33:19 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,14 @@
 
 # ifndef HOME
 #  define HOME "/"
+# endif
+
+# ifndef OSX
+#  define OSX 0
+# endif
+
+# ifndef LINUX
+#  define LINUX 0
 # endif
 
 enum stage 				{ERROR, LOGIN, DASHBOARD, ONE, NEW, NB};
