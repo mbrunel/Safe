@@ -124,7 +124,7 @@ int main(int ac, char *av[], char *env[])
 	memset(w.log->check, 0, 256);
 	w.log->lens[0] = 0;w.log->lens[1] = 0;w.log->lens[2] = 0;
 	exceptions_handler();
-	if(nkc_init( w.nkc, "", 0.4,0.4, NKC_WIN_MAXIMIZED))
+	if(nkc_init( w.nkc, "Safe", 0.4,0.4, NKC_WIN_MAXIMIZED))
 	{
 		load_img(&w);
 		nkc_set_main_loop(w.nkc, mainLoop, (void*)&w);
