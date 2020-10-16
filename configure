@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [ `uname` = "Darwin" ]
+then
+	cp DarwinMakefile.in Makefile
+elif [ `uname` = "Linux" ]
+then
+	sudo apt-get -y install gcc make libsdl2-dev libsdl2-image-dev libssl-dev > /dev/null
+	cp LinuxMakefile.in Makefile
+fi
+echo "everything is ok you can now run :
+make : if you just want the executable
+make install : if you want it as a package"

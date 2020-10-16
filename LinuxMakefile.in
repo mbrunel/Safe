@@ -1,0 +1,85 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    LinuxMakefile.in                                   :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: user42 <user42@student.42.fr>              +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2020/02/15 01:02:41 by mbrunel           #+#    #+#              #
+#    Updated: 2020/10/16 23:37:03 by user42           ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+NAME=Safe
+
+BUILD=.build
+D_SRC=src
+D_INC=inc
+D_OBJ=$(BUILD)/obj
+D_DEP=$(BUILD)/dep
+D_SUB=
+DIRS:=$(D_DEP) $(addprefix $(D_DEP)/, $(D_SUB))\
+	$(D_OBJ) $(addprefix $(D_OBJ)/, $(D_SUB))
+D_LIB=lib
+D_NUKLEAR=$(D_LIB)/nuklear
+
+CC=gcc
+CFLAGS=-Ofast -g3 -Wall -Wextra -DLINUX=1 -Wno-unused-result
+IFLAGS=-I$(D_NUKLEAR) -I$(D_INC) `pkg-config openssl --cflags` `pkg-config sdl2 --cflags` -I/usr/include/libdrm
+LDFLAGS=-lm -DNKCD=NKC_SDL `pkg-config openssl --libs` `pkg-config sdl2 --libs` -L/usr/local/lib -Wl,-rpath,/usr/local/lib -Wl,--enable-new-dtags -lGL
+DFLAGS=-MP -MMD -MF $(D_DEP)/$*.d -MT $@
+CPPFLAGS=$(CFLAGS) $(IFLAGS) $(DFLAGS)
+
+D_INSTL=Safe_1.1-1_all
+
+C_RED=\033[31m
+C_GREEN=\033[32m
+C_CYAN=\033[36m
+C_NONE=\033[0m
+CROSS=✘#\xE2\x9C\x95
+CHECK=✔#\xE2\x9C\x94
+BUILD_MSG=$(C_GREEN)$(CHECK)$(C_NONE)
+REMOVE_MSG=$(C_RED)$(CROSS)$(C_NONE)
+
+SRC=main.c\
+	styles.c\
+	back_end.c\
+	utils.c\
+	front_end.c\
+	aes.c
+OBJ:=$(patsubst %.c, $(D_OBJ)/%.o, $(SRC))
+DEP:=$(patsubst %.c, $(D_DEP)/%.d, $(SRC))
+
+all : $(DEPENDENCIES)
+	@$(MAKE) -j $(NAME)
+
+$(NAME) : $(OBJ)
+	@$(CC) $(OBJ) $(LDFLAGS) -o $(NAME)
+	@printf "$(BUILD_MSG) %s\n" $@
+
+clean :
+	@rm -rf $(BUILD) $(D_INSTL).deb
+	@printf "$(REMOVE_MSG) rm %s\n" $(BUILD) $(D_INSTL).deb
+
+fclean : clean
+	@rm -rf $(NAME)
+	@printf "$(REMOVE_MSG) rm %s\n" $(NAME)
+
+re : fclean all
+
+install : all
+	install -D $(NAME) $(D_INSTL)/usr/bin/$(NAME)
+	dpkg-deb --build $(D_INSTL)
+	sudo dpkg -i $(D_INSTL).deb
+
+$(BUILD) :
+	@mkdir -p $@ $(DIRS)
+	@printf "$(BUILD_MS-DLINUX=1G) %s\n" $@
+
+-include $(DEP)
+
+$(D_OBJ)/%.o : $(D_SRC)/%.c | $(BUILD)
+	@$(CC) $(CPPFLAGS) -c $< -o $@
+	@printf "$(BUILD_MSG) %s\n" $(<F)
+
+.PHONY: all clean fclean re

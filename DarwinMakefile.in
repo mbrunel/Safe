@@ -3,24 +3,14 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+         #
+#    By: user42 <user42@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/15 01:02:41 by mbrunel           #+#    #+#              #
-#    Updated: 2020/03/14 06:52:00 by mbrunel          ###   ########.fr        #
+#    Updated: 2020/10/16 22:06:15 by user42           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME=Safe
-
-OS := $(shell uname)
-
-OPENSSL=$(HOME)/.brew/Cellar/openssl@1.1
-SDL2=$(HOME)/.brew/Cellar/sdl2
-
-ifeq ($(OS), Linux)
-OPENSSL=/usr/bin/sdl2-config
-SDL2=/usr/bin/openssl
-endif
 
 BUILD=.build
 D_SRC=src
@@ -36,8 +26,6 @@ D_LIB=lib
 D_NUKLEAR=$(D_LIB)/nuklear
 
 CC=gcc
-DFLAGS=-MP -MMD -MF $(D_DEP)/$*.d -MT $@
-
 
 CFLAGS=-Wall -Wextra -g3 -Ofast -DOSX=1
 IFLAGS=-I$(D_INC) -I$(D_NUKLEAR) `sdl2-config --cflags` -I/$(HOME)/.brew/opt/openssl@1.1/include -I$(HOME)/.brew/include
@@ -48,6 +36,9 @@ CFLAGS=-Ofast -g3 -Wall -Wextra -DLINUX=1
 IFLAGS=-I$(D_NUKLEAR) -I$(D_INC) `pkg-config openssl --cflags` `pkg-config sdl2 --cflags` -I/usr/include/libdrm
 LDFLAGS=-lm -DNKCD=NKC_SDL `pkg-config openssl --libs` `pkg-config sdl2 --libs` -L/usr/local/lib -Wl,-rpath,/usr/local/lib -Wl,--enable-new-dtags -lGL
 endif
+
+DFLAGS=-MP -MMD -MF $(D_DEP)/$*.d -MT $@
+CPPFLAGS=$(CFLAGS) $(IFLAGS) $(DFLAGS)
 
 C_RED=\033[31m
 C_GREEN=\033[32m
@@ -68,10 +59,10 @@ SRC=main.c\
 OBJ:=$(patsubst %.c, $(D_OBJ)/%.o, $(SRC))
 DEP:=$(patsubst %.c, $(D_DEP)/%.d, $(SRC))
 
-all : $(SDL2) $(OPENSSL)
+all : $(DEPENDENCIES)
 	@$(MAKE) -j $(NAME)
 
-$(NAME) : $(SDL2) $(OPENSSL) $(OBJ)
+$(NAME) : $(OBJ)
 	@$(CC) $(OBJ) $(LDFLAGS) -o $(NAME)
 	@printf "$(BUILD_MSG) %s\n" $@
 
@@ -85,22 +76,14 @@ fclean : clean
 
 re : fclean all
 
-$(OPENSSL) :
-	@printf "\n$(C_CYAN)Install openssl...$(C_NONE)\n"
-	brew install openssl
-
-$(SDL2) :
-	@printf "\n$(C_CYAN)Install sdl2...$(C_NONE)\n"
-	brew install sdl2
-
 $(BUILD) :
 	@mkdir -p $@ $(DIRS)
 	@printf "$(BUILD_MS-DLINUX=1G) %s\n" $@
 
-$(D_OBJ)/%.o : $(D_SRC)/%.c | $(BUILD)
-	@$(CC) $(CFLAGS) $(IFLAGS) $(DFLAGS) -c $< -o $@
-	@printf "$(BUILD_MSG) %s\n" $<
-
 -include $(DEP)
+
+$(D_OBJ)/%.o : $(D_SRC)/%.c | $(BUILD)
+	@$(CC) $(CPPFLAGS) -c $< -o $@
+	@printf "$(BUILD_MSG) %s\n" $(<F)
 
 .PHONY: all clean fclean re

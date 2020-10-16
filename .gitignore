@@ -39,6 +39,7 @@ ps-managerv2
 cyph
 input
 output
+Safe
 
 # Debug files
 *.dSYM/
