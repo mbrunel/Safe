@@ -6,7 +6,7 @@
 #    By: user42 <user42@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/15 01:02:41 by mbrunel           #+#    #+#              #
-#    Updated: 2020/10/16 23:37:03 by user42           ###   ########.fr        #
+#    Updated: 2020/10/16 23:51:27 by user42           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,7 +51,7 @@ OBJ:=$(patsubst %.c, $(D_OBJ)/%.o, $(SRC))
 DEP:=$(patsubst %.c, $(D_DEP)/%.d, $(SRC))
 
 all : $(DEPENDENCIES)
-	@$(MAKE) -j $(NAME)
+	@$(MAKE) -sj $(NAME)
 
 $(NAME) : $(OBJ)
 	@$(CC) $(OBJ) $(LDFLAGS) -o $(NAME)
@@ -68,9 +68,13 @@ fclean : clean
 re : fclean all
 
 install : all
-	install -D $(NAME) $(D_INSTL)/usr/bin/$(NAME)
-	dpkg-deb --build $(D_INSTL)
-	sudo dpkg -i $(D_INSTL).deb
+	@install -D $(NAME) $(D_INSTL)/usr/bin/$(NAME)
+	@dpkg-deb --build $(D_INSTL)
+	@sudo dpkg -i $(D_INSTL).deb
+	@echo uninstall by running make uninstall
+
+uninstall :
+	@sudo dpkg --remove Safe
 
 $(BUILD) :
 	@mkdir -p $@ $(DIRS)
