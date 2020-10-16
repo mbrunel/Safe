@@ -58,3 +58,4 @@ dkms.conf
 
 # packages files
 *.deb
+Makefile
