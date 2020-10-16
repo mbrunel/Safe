@@ -34,4 +34,4 @@ everything else is pretty intuitive as you use it
 
 ## License
 
-see [License](License)
+see [License](LICENSE)
