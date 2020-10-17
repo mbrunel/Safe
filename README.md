@@ -1,7 +1,5 @@
 # Safe
-## Local password manager for Linux
-
-### A macos support is coming
+## Local password manager for Linux and Mac
 
 ## Building
 
