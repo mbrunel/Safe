@@ -19,6 +19,7 @@
 #include "aes.h"
 
 #include <signal.h>
+#include <stdlib.h>
 
 int catch_exceptions = 0;
 
@@ -46,29 +47,29 @@ void load_img(t_world *w)
 	if (OSX == 1)
 	{
 		char *imgs;
-		char home[1024];
-		strcpy(home, search_env("HOME", w->env));
-		if ((imgs = strjoin(home, "/Applications/Safe.app/Contents/icon/logo.png")))
+		char *home = getenv("HOME");
+
+		if ((imgs = strjoin(home, "/Applications/Safe.app/Contents/Ressources/logo.png")))
 		{
 			w->img->logo = nkc_load_image_file(w->nkc, imgs);
 			free(imgs);
 		}
-		if ((imgs = strjoin(home, "/Applications/Safe.app/Contents/icon/view_hide_icon.png")))
+		if ((imgs = strjoin(home, "/Applications/Safe.app/Contents/Ressources/view_hide_icon.png")))
 		{
 			w->img->hide = nkc_load_image_file(w->nkc, imgs);
 			free(imgs);
 		}
-		if ((imgs = strjoin(home, "/Applications/Safe.app/Contents/icon/view_show_icon.png")))
+		if ((imgs = strjoin(home, "/Applications/Safe.app/Contents/Ressources/view_show_icon.png")))
 		{
 			w->img->show = nkc_load_image_file(w->nkc, imgs);
 			free(imgs);
 		}
-		if ((imgs = strjoin(home, "/Applications/Safe.app/Contents/icon/cpy.png")))
+		if ((imgs = strjoin(home, "/Applications/Safe.app/Contents/Ressources/cpy.png")))
 		{
 			w->img->cpy = nkc_load_image_file(w->nkc, imgs);
 			free(imgs);
 		}
-		if ((imgs = strjoin(home, "/Applications/Safe.app/Contents/icon/reroll.png")))
+		if ((imgs = strjoin(home, "/Applications/Safe.app/Contents/Ressources/reroll.png")))
 		{
 			w->img->reroll = nkc_load_image_file(w->nkc, imgs);
 			free(imgs);

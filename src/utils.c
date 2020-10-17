@@ -6,7 +6,7 @@
 /*   By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 18:22:17 by mbrunel           #+#    #+#             */
-/*   Updated: 2020/03/13 12:22:49 by mbrunel          ###   ########.fr       */
+/*   Updated: 2020/10/17 18:24:04 by mbrunel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -284,15 +284,4 @@ int check_new_user(char *usr_path, char *dir_path)
 		}
 	}
 	return (1);
-}
-
-char	*search_env(char *env_tmp, char *env[])
-{
-	int	i;
-
-	i = 0;
-	while (env[++i])
-		if (!strncmp(env[i], env_tmp, strlen(env_tmp)))
-			return (env[i] + strlen(env_tmp) + 1);
-	return (NULL);
 }

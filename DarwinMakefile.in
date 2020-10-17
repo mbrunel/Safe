@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: user42 <user42@student.42.fr>              +#+  +:+       +#+         #
+#    By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/15 01:02:41 by mbrunel           #+#    #+#              #
-#    Updated: 2020/10/16 22:06:15 by user42           ###   ########.fr        #
+#    Updated: 2020/10/17 18:53:23 by mbrunel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,15 +30,13 @@ CC=gcc
 CFLAGS=-Wall -Wextra -g3 -Ofast -DOSX=1
 IFLAGS=-I$(D_INC) -I$(D_NUKLEAR) `sdl2-config --cflags` -I/$(HOME)/.brew/opt/openssl@1.1/include -I$(HOME)/.brew/include
 LDFLAGS=-lm -DNKCD=NKC_SDL -framework OpenGL -framework Cocoa -framework IOKit `sdl2-config --libs` -L/$(HOME)/.brew/opt/openssl@1.1/lib -lcrypto
-
-ifeq ($(OS), Linux)
-CFLAGS=-Ofast -g3 -Wall -Wextra -DLINUX=1
-IFLAGS=-I$(D_NUKLEAR) -I$(D_INC) `pkg-config openssl --cflags` `pkg-config sdl2 --cflags` -I/usr/include/libdrm
-LDFLAGS=-lm -DNKCD=NKC_SDL `pkg-config openssl --libs` `pkg-config sdl2 --libs` -L/usr/local/lib -Wl,-rpath,/usr/local/lib -Wl,--enable-new-dtags -lGL
-endif
-
 DFLAGS=-MP -MMD -MF $(D_DEP)/$*.d -MT $@
 CPPFLAGS=$(CFLAGS) $(IFLAGS) $(DFLAGS)
+
+D_INSTL=Safe.app/Contents
+D_BIN=$(D_INSTL)/MacOS
+D_ICON=$(D_INSTL)/Ressources
+D_APP=$(HOME)/Applications
 
 C_RED=\033[31m
 C_GREEN=\033[32m
@@ -60,7 +58,7 @@ OBJ:=$(patsubst %.c, $(D_OBJ)/%.o, $(SRC))
 DEP:=$(patsubst %.c, $(D_DEP)/%.d, $(SRC))
 
 all : $(DEPENDENCIES)
-	@$(MAKE) -j $(NAME)
+	@$(MAKE) -sj $(NAME)
 
 $(NAME) : $(OBJ)
 	@$(CC) $(OBJ) $(LDFLAGS) -o $(NAME)
@@ -75,6 +73,21 @@ fclean : clean
 	@printf "$(REMOVE_MSG) rm %s\n" $(NAME)
 
 re : fclean all
+
+install : all
+	@mkdir -p $(D_ICON) && cp icon/* $(D_ICON) && cp $(D_ICON)/logo.psd $(D_ICON)/logo.icns
+	@mkdir -p $(D_BIN) && cp $(NAME) $(D_BIN)/$(NAME)
+	@cp -rf Safe.app $(D_APP)
+	@echo 'alias Safe="open -a Safe"' >> $(HOME)/.zshrc
+	@echo 'alias Safe="open -a Safe"' >> $(HOME)/.bashrc
+	@echo "Safe is now installed in $(D_APP)"
+
+uninstall :
+	@rm -rf $(D_APP)/Safe.app
+	@echo "Safe is now removed from $(D_APP)"
+
+fullclean : fclean
+	rm -rf $(D_ICON) $(D_BIN) Makefile
 
 $(BUILD) :
 	@mkdir -p $@ $(DIRS)

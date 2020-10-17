@@ -59,3 +59,10 @@ dkms.conf
 # packages files
 *.deb
 Makefile
+Safe*all/usr/bin
+Safe*all/usr/share/Safe
+Safe.app/Contents/MacOS
+Safe.app/Contents/Ressources
+
+
+

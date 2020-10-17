@@ -1,13 +1,28 @@
 #!/bin/bash
 
+set -e
+
+readonly DARWINMK="DarwinMakefile.in"
+readonly LINUXMK="LinuxMakefile.in"
+
 if [ `uname` = "Darwin" ]
 then
-	cp DarwinMakefile.in Makefile
+	brew update
+	brew list sdl2 &> /dev/null \
+		|| brew install sdl2
+	brew list openssl &> /dev/null \
+		|| brew install openssl
+	brew list sdl2_image &> /dev/null \
+		|| brew install sdl2_image
+	cp $DARWINMK Makefile
 elif [ `uname` = "Linux" ]
 then
-	sudo apt-get -y install gcc make libsdl2-dev libsdl2-image-dev libssl-dev > /dev/null
-	cp LinuxMakefile.in Makefile
+	sudo apt update
+	sudo apt-get -y install gcc make libsdl2-dev libsdl2-image-dev libssl-dev
+	cp $LINUXMK Makefile
 fi
-echo "everything is ok you can now run :
-make : if you just want the executable
-make install : if you want it as a package"
+
+echo "everything is ok you can now run :"
+echo "make : if you just want to build the executable"
+echo "make install : if you want it permanently installed"
+echo "make uninstall : if you want to uninstall it"

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    LinuxMakefile.in                                   :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: user42 <user42@student.42.fr>              +#+  +:+       +#+         #
+#    By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/15 01:02:41 by mbrunel           #+#    #+#              #
-#    Updated: 2020/10/16 23:51:27 by user42           ###   ########.fr        #
+#    Updated: 2020/10/17 18:59:14 by mbrunel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,6 +31,8 @@ DFLAGS=-MP -MMD -MF $(D_DEP)/$*.d -MT $@
 CPPFLAGS=$(CFLAGS) $(IFLAGS) $(DFLAGS)
 
 D_INSTL=Safe_1.1-1_all
+D_BIN=$(D_INSTL)/usr/bin
+D_ICON=$(D_INSTL)/usr/share/$(NAME)
 
 C_RED=\033[31m
 C_GREEN=\033[32m
@@ -50,7 +52,7 @@ SRC=main.c\
 OBJ:=$(patsubst %.c, $(D_OBJ)/%.o, $(SRC))
 DEP:=$(patsubst %.c, $(D_DEP)/%.d, $(SRC))
 
-all : $(DEPENDENCIES)
+all :
 	@$(MAKE) -sj $(NAME)
 
 $(NAME) : $(OBJ)
@@ -58,8 +60,8 @@ $(NAME) : $(OBJ)
 	@printf "$(BUILD_MSG) %s\n" $@
 
 clean :
-	@rm -rf $(BUILD) $(D_INSTL).deb
-	@printf "$(REMOVE_MSG) rm %s\n" $(BUILD) $(D_INSTL).deb
+	@rm -rf $(BUILD)
+	@printf "$(REMOVE_MSG) rm %s\n" $(BUILD)
 
 fclean : clean
 	@rm -rf $(NAME)
@@ -68,13 +70,17 @@ fclean : clean
 re : fclean all
 
 install : all
-	@install -D $(NAME) $(D_INSTL)/usr/bin/$(NAME)
+	@install -D $(NAME) $(D_BIN)/$(NAME)
+	@mkdir -p $(D_ICON) && cp icon/* $(D_ICON)
 	@dpkg-deb --build $(D_INSTL)
 	@sudo dpkg -i $(D_INSTL).deb
 	@echo uninstall by running make uninstall
 
 uninstall :
-	@sudo dpkg --remove Safe
+	@sudo dpkg --remove $(NAME)
+
+fullclean : fclean
+	@rm -rf $(D_BIN) $(D_ICON) $(D_INSTL).deb Makefile
 
 $(BUILD) :
 	@mkdir -p $@ $(DIRS)
