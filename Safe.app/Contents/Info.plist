@@ -1,0 +1,15 @@
+<plist>
+<?xml version="1.0" encoding="UTF-8"?>
+<dict>
+	<key>CFBundleExecutable</key>
+	<string>Safe</string>
+	<key>CFBundleIdentifier</key>
+	<string>1.0</string>
+	<key>CFBundleName</key>
+	<string>Safe</string>
+	<key>CFBundlePackageType</key>
+	<string>AAPL</string>
+	<key>CFBundleIconFile</key>
+	<string>Safe.icns</string>
+</dict>
+</plist>

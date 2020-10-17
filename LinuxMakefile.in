@@ -6,7 +6,7 @@
 #    By: mbrunel <mbrunel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/15 01:02:41 by mbrunel           #+#    #+#              #
-#    Updated: 2020/10/17 18:59:14 by mbrunel          ###   ########.fr        #
+#    Updated: 2020/10/17 19:17:58 by mbrunel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -80,7 +80,7 @@ uninstall :
 	@sudo dpkg --remove $(NAME)
 
 fullclean : fclean
-	@rm -rf $(D_BIN) $(D_ICON) $(D_INSTL).deb Makefile
+	rm -rf $(D_BIN) $(D_ICON) $(D_INSTL).deb Makefile
 
 $(BUILD) :
 	@mkdir -p $@ $(DIRS)
